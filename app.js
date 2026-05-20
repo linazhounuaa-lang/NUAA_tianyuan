@@ -174,7 +174,7 @@ const WorkshopApp = (() => {
       ["issue", "期数"], ["theme", "本期主题"], ["expert_name", "邀请专家"],
       ["expert_affiliation", "专家单位"], ["expert_title", "专家职称"], ["expert_field", "专家方向"],
       ["talk_title", "报告题目"], ["event_time", "活动时间"], ["location", "活动地点"],
-      ["host", "主持人"], ["leader", "团队领导"], ["internal_speaker", "内部交流人"],
+      ["host", "主持人"], ["leader", "实验室负责人"], ["internal_speaker", "内部交流人"],
       ["contact_person", "联系人"], ["expert_bio", "专家简介"], ["abstract", "报告摘要"]
     ];
   }
@@ -213,7 +213,7 @@ const WorkshopApp = (() => {
         alert("云端保存失败，但数据已临时保存在本机。请联系负责人检查配置。");
       }
       form.reset();
-      $("#submitMessage").textContent = "提交成功，感谢您的推荐。负责人将统一汇总并提交团队领导审定。";
+      $("#submitMessage").textContent = "提交成功，感谢您的推荐。负责人将统一汇总并提交实验室负责人审定。";
     });
   }
 
@@ -399,9 +399,9 @@ const WorkshopApp = (() => {
   function drafts(w) {
     const talk = w.talk_title || "待定";
     return {
-      invite: `${w.expert_name || "XX"}老师您好，打扰您了。我们团队计划每季度组织一次专题学术 Workshop，主要围绕光电信息、智能感知、先进成像与交叉前沿方向开展交流。本季度 Workshop 拟聚焦“${w.theme || "XXX"}”主题。团队老师认为您在 ${w.expert_field || "相关"} 方向的研究与本期主题非常契合，因此想诚挚邀请您在方便的时候来团队作一次专题报告，并与团队老师和学生交流。\n\n初步时间考虑为 ${w.event_time || "XXX"}，地点为 ${w.location || "XXX"}。具体时间可根据您的安排灵活调整。不知您近期是否方便？期待有机会邀请您来交流指导。`,
+      invite: `${w.expert_name || "XX"}老师您好，打扰您了。南京航空航天大学微波光子学实验室计划每季度组织一次专题学术 Workshop，主要围绕微波光子学、光电信息、智能感知、先进成像与交叉前沿方向开展交流。本季度 Workshop 拟聚焦“${w.theme || "XXX"}”主题。实验室老师认为您在 ${w.expert_field || "相关"} 方向的研究与本期主题非常契合，因此想诚挚邀请您在方便的时候来实验室作一次专题报告，并与实验室老师和学生交流。\n\n初步时间考虑为 ${w.event_time || "XXX"}，地点为 ${w.location || "XXX"}。具体时间可根据您的安排灵活调整。不知您近期是否方便？期待有机会邀请您来交流指导。`,
       notice: `各位老师、同学好：\n\n团队拟举办${w.issue || "本期"}季度 Workshop，主题为“${w.theme || "待定"}”，邀请${w.expert_affiliation || ""}${w.expert_title || ""}${w.expert_name || "专家"}作专题报告。\n\n报告题目：${talk}\n时间：${w.event_time || "待定"}\n地点：${w.location || "待定"}\n主持人：${w.host || "待定"}\n联系人：${w.contact_person || "待定"}\n\n欢迎各位老师和同学参加交流。`,
-      host: `各位老师、同学，大家好。欢迎参加${w.issue || "本期"}团队季度 Workshop。本次 Workshop 的主题是“${w.theme || "待定"}”。今天我们邀请到${w.expert_affiliation || ""}${w.expert_title || ""}${w.expert_name || "专家"}为大家作报告，报告题目是“${talk}”。\n\n${w.expert_bio || "专家简介待补充。"}\n\n下面让我们欢迎${w.expert_name || "专家"}作报告。`,
+      host: `各位老师、同学，大家好。欢迎参加${w.issue || "本期"}南京航空航天大学微波光子学实验室季度 Workshop。本次 Workshop 的主题是“${w.theme || "待定"}”。今天我们邀请到${w.expert_affiliation || ""}${w.expert_title || ""}${w.expert_name || "专家"}为大家作报告，报告题目是“${talk}”。\n\n${w.expert_bio || "专家简介待补充。"}\n\n下面让我们欢迎${w.expert_name || "专家"}作报告。`,
       news: `${w.issue || "近日"}，团队围绕“${w.theme || "相关主题"}”举办季度 Workshop，邀请${w.expert_affiliation || ""}${w.expert_title || ""}${w.expert_name || "专家"}作题为“${talk}”的专题报告。活动由${w.host || "主持人"}主持，团队师生参加交流。\n\n报告围绕${w.abstract || w.expert_field || "相关研究方向"}展开，现场师生就研究进展、合作方向和后续交流进行了讨论。本次 Workshop 促进了团队与外部专家的学术互动，为后续科研合作奠定了基础。`,
       report: leaderText()
     };
