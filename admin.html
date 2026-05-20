@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>负责人后台 - 团队季度 Workshop</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <strong>团队季度 Workshop</strong>
+      <span>Quarterly Academic Workshop</span>
+    </a>
+    <nav>
+      <a href="index.html">老师填写</a>
+      <a href="reports.html">已报告专家</a>
+      <a aria-current="page" href="admin.html">负责人后台</a>
+      <a href="leader.html">领导决策</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section id="loginPanel" class="panel login">
+      <h1>负责人后台</h1>
+      <p>请输入后台口令。默认口令可在 <code>app.js</code> 中修改。</p>
+      <form id="loginForm" class="inline-form">
+        <input type="password" name="password" placeholder="后台口令" required>
+        <button class="primary" type="submit">进入</button>
+      </form>
+      <p id="loginMessage" class="muted"></p>
+    </section>
+
+    <section id="adminApp" class="hidden">
+      <div class="hero compact">
+        <p class="eyebrow">负责人后台</p>
+        <h1>候选专家管理与会务材料生成</h1>
+        <p>完成自动分级、领导名单、本期设置、文案生成和台账归档。</p>
+      </div>
+
+      <section class="stats" id="stats"></section>
+
+      <section class="toolbar panel">
+        <input id="searchInput" placeholder="搜索专家、单位、方向、推荐老师">
+        <select id="priorityFilter">
+          <option value="">全部优先级</option>
+          <option value="A">A 类</option><option value="B">B 类</option><option value="C">C 类</option>
+        </select>
+        <select id="statusFilter">
+          <option value="">全部邀请状态</option>
+          <option>待确认</option><option>已邀请</option><option>已接受</option><option>时间不合适</option><option>暂缓</option>
+        </select>
+        <button id="copyLeaderText" type="button">复制领导名单</button>
+        <button id="exportCsv" type="button">导出 CSV</button>
+        <button id="seedData" type="button">加入测试数据</button>
+      </section>
+
+      <section class="panel">
+        <div class="section-head">
+          <h2>候选专家池</h2>
+          <span id="recordCount" class="muted"></span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>优先级</th><th>专家</th><th>方向</th><th>推荐老师</th><th>联系基础</th><th>邀请状态</th><th>领导选择</th><th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="recommendationsBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="grid-two">
+        <div class="panel">
+          <div class="section-head">
+            <h2>本期 Workshop</h2>
+            <button id="saveWorkshop" type="button">保存本期信息</button>
+          </div>
+          <form id="workshopForm" class="form-grid single"></form>
+        </div>
+        <div class="panel">
+          <div class="section-head">
+            <h2>自动文案</h2>
+            <button id="copyDraft" type="button">复制当前文案</button>
+          </div>
+          <div class="tabs" id="draftTabs"></div>
+          <textarea id="draftOutput" class="draft" rows="22"></textarea>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-head">
+          <h2>台账归档</h2>
+          <button id="archiveWorkshop" class="primary" type="button">归档本期 Workshop</button>
+        </div>
+        <p class="muted">归档后的记录会自动出现在“已报告专家”公开展示页。</p>
+        <div class="form-grid single compact-fields" id="archiveFields"></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>期数</th><th>时间</th><th>主题</th><th>报告专家</th><th>报告题目</th><th>主持人</th><th>新闻稿</th><th>后续跟进</th><th>操作</th></tr></thead>
+            <tbody id="eventsBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+  <script>
+    WorkshopApp.initAdmin();
+  </script>
+</body>
+</html>

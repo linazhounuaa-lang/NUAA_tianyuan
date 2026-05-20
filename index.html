@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>团队季度 Workshop 推荐填写</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <strong>团队季度 Workshop</strong>
+      <span>Quarterly Academic Workshop</span>
+    </a>
+    <nav>
+      <a aria-current="page" href="index.html">老师填写</a>
+      <a href="reports.html">已报告专家</a>
+      <a href="admin.html">负责人后台</a>
+      <a href="leader.html">领导决策</a>
+    </nav>
+  </header>
+
+  <main class="page narrow">
+    <section class="hero compact">
+      <p class="eyebrow">南京航空航天大学团队学术交流</p>
+      <h1>推荐主题与拟邀请专家</h1>
+      <p>请填写建议主题和专家信息，负责人将统一汇总并提交团队领导审定。</p>
+    </section>
+
+    <form id="recommendationForm" class="panel form-grid">
+      <label>推荐老师 <input required name="recommender" autocomplete="name"></label>
+      <label>建议 Workshop 主题 <input required name="theme" placeholder="如：智能光学成像与光电感知"></label>
+      <label>推荐专家姓名 <input required name="expert_name" placeholder="如：XX 教授"></label>
+      <label>专家单位 <input required name="expert_affiliation" placeholder="如：南京大学"></label>
+
+      <label>专家职称
+        <select name="expert_title">
+          <option value="">请选择</option>
+          <option>教授</option><option>研究员</option><option>副教授</option>
+          <option>副研究员</option><option>青年教师</option><option>其他</option><option>不确定</option>
+        </select>
+      </label>
+      <label>专家研究方向 <input required name="expert_field" placeholder="如：计算成像、超表面"></label>
+      <label>推荐方向分类
+        <select name="category" data-faculty-directions>
+          <option value="">请选择</option>
+        </select>
+      </label>
+      <label>建议报告题目 <input name="talk_title"></label>
+
+      <label>是否已有联系基础
+        <select required name="contact_basis">
+          <option value="">请选择</option>
+          <option>有合作基础</option><option>认识可联系</option><option>无直接联系</option><option>不确定</option>
+        </select>
+      </label>
+      <label>是否可协助邀请
+        <select required name="can_help_invite">
+          <option value="">请选择</option>
+          <option>是</option><option>否</option><option>待定</option>
+        </select>
+      </label>
+      <label>建议季度
+        <select name="suggested_quarter">
+          <option value="">请选择</option>
+          <option>Q1</option><option>Q2</option><option>Q3</option><option>Q4</option><option>待定</option>
+        </select>
+      </label>
+      <label>备注 <textarea name="notes" rows="3"></textarea></label>
+
+      <label class="wide">推荐理由
+        <textarea required name="reason" rows="5" placeholder="请说明方向契合、项目合作、学术影响力等"></textarea>
+      </label>
+
+      <div class="actions wide">
+        <button class="primary" type="submit">提交推荐</button>
+        <p id="submitMessage" role="status"></p>
+      </div>
+    </form>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+  <script>
+    WorkshopApp.initRecommendationForm();
+  </script>
+</body>
+</html>

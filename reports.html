@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>已报告专家 - 团队季度 Workshop</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <strong>团队季度 Workshop</strong>
+      <span>Quarterly Academic Workshop</span>
+    </a>
+    <nav>
+      <a href="index.html">老师填写</a>
+      <a aria-current="page" href="reports.html">已报告专家</a>
+      <a href="admin.html">负责人后台</a>
+      <a href="leader.html">领导决策</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section class="lab-hero">
+      <div>
+        <p class="eyebrow">Workshop Reports</p>
+        <h1>已报告专家与历史 Workshop</h1>
+        <p>集中展示团队已邀请并完成报告的专家、报告主题、时间地点和后续合作记录，便于年度总结和项目材料整理。</p>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+    </section>
+
+    <section class="toolbar panel report-toolbar">
+      <input id="reportSearch" placeholder="搜索专家、单位、主题、报告题目">
+      <select id="reportYear">
+        <option value="">全部年份</option>
+      </select>
+      <button id="copyReports" type="button">复制展示名单</button>
+    </section>
+
+    <section class="report-summary" id="reportSummary"></section>
+    <section class="report-list" id="reportList"></section>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+  <script>
+    WorkshopApp.initReports();
+  </script>
+</body>
+</html>

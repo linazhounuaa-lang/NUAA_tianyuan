@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>领导决策 - 团队季度 Workshop</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <strong>团队季度 Workshop</strong>
+      <span>Quarterly Academic Workshop</span>
+    </a>
+    <nav>
+      <a href="index.html">老师填写</a>
+      <a href="reports.html">已报告专家</a>
+      <a href="admin.html">负责人后台</a>
+      <a aria-current="page" href="leader.html">领导决策</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section class="hero compact">
+      <p class="eyebrow">领导决策页</p>
+      <h1>候选专家名单</h1>
+      <p>按优先级查看候选专家，并记录本期邀请、备选或后续跟进意见。</p>
+    </section>
+    <section class="toolbar panel">
+      <input id="leaderSearch" placeholder="搜索专家、单位、方向">
+      <button id="copyLeaderSummary" type="button">复制汇报摘要</button>
+    </section>
+    <section id="leaderList" class="leader-list"></section>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+  <script>
+    WorkshopApp.initLeader();
+  </script>
+</body>
+</html>
