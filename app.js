@@ -156,6 +156,7 @@ const WorkshopApp = (() => {
       expert_name: "",
       expert_affiliation: "",
       expert_title: "",
+      talent_title: "",
       expert_field: "",
       talk_title: "",
       event_time: "",
@@ -172,7 +173,7 @@ const WorkshopApp = (() => {
   function fields() {
     return [
       ["issue", "期数"], ["theme", "本期主题"], ["expert_name", "邀请专家"],
-      ["expert_affiliation", "专家单位"], ["expert_title", "专家职称"], ["expert_field", "专家方向"],
+      ["expert_affiliation", "专家单位"], ["expert_title", "专家职称"], ["talent_title", "人才头衔"], ["expert_field", "专家方向"],
       ["talk_title", "报告题目"], ["event_time", "活动时间"], ["location", "活动地点"],
       ["host", "主持人"], ["leader", "实验室负责人"], ["internal_speaker", "内部交流人"],
       ["contact_person", "联系人"], ["expert_bio", "专家简介"], ["abstract", "报告摘要"]
@@ -183,7 +184,7 @@ const WorkshopApp = (() => {
     const groups = ["A", "B", "C"].map(level => {
       const rows = items.filter(item => item.priority === level);
       const body = rows.length ? rows.map((r, index) =>
-        `${index + 1}. ${r.expert_name}，${r.expert_affiliation}，方向：${r.expert_field}。推荐老师：${r.recommender}。推荐理由：${r.reason}`
+        `${index + 1}. ${r.expert_name}，${r.expert_affiliation}${r.talent_title ? "，" + r.talent_title : ""}，方向：${r.expert_field}。推荐老师：${r.recommender}。推荐理由：${r.reason}`
       ).join("\n") : "暂无";
       return `【${priorityText(level)}】\n${body}`;
     }).join("\n\n");
@@ -353,6 +354,7 @@ const WorkshopApp = (() => {
       expert_name: rec.expert_name,
       expert_affiliation: rec.expert_affiliation,
       expert_title: rec.expert_title,
+      talent_title: rec.talent_title,
       expert_field: rec.expert_field,
       talk_title: rec.talk_title
     };
@@ -474,7 +476,7 @@ const WorkshopApp = (() => {
   }
 
   function exportCsv() {
-    const headers = ["created_at","recommender","theme","expert_name","expert_affiliation","expert_title","expert_field","contact_basis","can_help_invite","reason","priority","invite_status","leader_decision"];
+    const headers = ["created_at","recommender","theme","expert_name","expert_affiliation","expert_title","talent_title","expert_field","contact_basis","can_help_invite","reason","priority","invite_status","leader_decision"];
     const lines = [headers.join(",")].concat(recommendations().map(row => headers.map(h => `"${String(row[h] || "").replaceAll('"', '""')}"`).join(",")));
     const blob = new Blob(["\ufeff" + lines.join("\n")], { type: "text/csv;charset=utf-8" });
     const link = document.createElement("a");
@@ -486,9 +488,9 @@ const WorkshopApp = (() => {
 
   async function seedData() {
     const samples = [
-      { recommender: "张老师", theme: "智能光学成像与光电感知", expert_name: "李教授", expert_affiliation: "南京大学", expert_title: "教授", expert_field: "计算成像、AI for Optics", category: "计算成像", talk_title: "智能计算成像前沿进展", contact_basis: "有合作基础", can_help_invite: "是", suggested_quarter: "Q2", reason: "方向契合团队重点布局，已有项目合作基础，可进一步推动基金申报。", notes: "" },
-      { recommender: "王老师", theme: "微纳光子与超表面器件", expert_name: "陈研究员", expert_affiliation: "中国科学院上海光机所", expert_title: "研究员", expert_field: "超表面、微纳光子", category: "微纳光子", talk_title: "", contact_basis: "认识可联系", can_help_invite: "待定", suggested_quarter: "Q3", reason: "研究方向前沿，与团队学生培养和平台建设方向契合。", notes: "" },
-      { recommender: "刘老师", theme: "光电安全与智能感知", expert_name: "赵副教授", expert_affiliation: "东南大学", expert_title: "副教授", expert_field: "光电安全、目标感知", category: "光电安全", talk_title: "", contact_basis: "无直接联系", can_help_invite: "否", suggested_quarter: "待定", reason: "方向相关，可作为长期跟进专家。", notes: "" }
+      { recommender: "张老师", theme: "智能光学成像与光电感知", expert_name: "李教授", expert_affiliation: "南京大学", expert_title: "教授", talent_title: "杰青", expert_field: "计算成像、AI for Optics", category: "计算成像", talk_title: "智能计算成像前沿进展", contact_basis: "有合作基础", can_help_invite: "是", suggested_quarter: "Q2", reason: "方向契合团队重点布局，已有项目合作基础，可进一步推动基金申报。", notes: "" },
+      { recommender: "王老师", theme: "微纳光子与超表面器件", expert_name: "陈研究员", expert_affiliation: "中国科学院上海光机所", expert_title: "研究员", talent_title: "国家级人才", expert_field: "超表面、微纳光子", category: "微纳光子", talk_title: "", contact_basis: "认识可联系", can_help_invite: "待定", suggested_quarter: "Q3", reason: "研究方向前沿，与团队学生培养和平台建设方向契合。", notes: "" },
+      { recommender: "刘老师", theme: "光电安全与智能感知", expert_name: "赵副教授", expert_affiliation: "东南大学", expert_title: "副教授", talent_title: "", expert_field: "光电安全、目标感知", category: "光电安全", talk_title: "", contact_basis: "无直接联系", can_help_invite: "否", suggested_quarter: "待定", reason: "方向相关，可作为长期跟进专家。", notes: "" }
     ].map(item => ({ id: uid(), created_at: new Date().toISOString(), invite_status: "待确认", leader_decision: "待定", leader_comment: "", ...item, priority: priorityFor(item) }));
     saveRecommendations([...samples, ...recommendations()]);
     seedEvents();
@@ -517,6 +519,7 @@ const WorkshopApp = (() => {
         expert_name: "李教授",
         expert_affiliation: "南京大学",
         expert_title: "教授",
+        talent_title: "杰青",
         expert_field: "计算成像、AI for Optics",
         talk_title: "智能计算成像前沿进展",
         location: "学院会议室",
@@ -537,6 +540,7 @@ const WorkshopApp = (() => {
         expert_name: "陈研究员",
         expert_affiliation: "中国科学院上海光机所",
         expert_title: "研究员",
+        talent_title: "国家级人才",
         expert_field: "超表面、微纳光子",
         talk_title: "微纳光学器件及其应用",
         location: "线上会议",
@@ -582,7 +586,7 @@ const WorkshopApp = (() => {
   function leaderCard(r) {
     return `<article class="leader-card">
       <div>
-        <h3>${escapeHtml(r.expert_name)} <span class="meta">${escapeHtml(r.expert_title || "")}</span></h3>
+        <h3>${escapeHtml(r.expert_name)} <span class="meta">${escapeHtml([r.expert_title, r.talent_title].filter(Boolean).join(" / "))}</span></h3>
         <p class="meta">${escapeHtml(r.expert_affiliation)}｜${escapeHtml(r.expert_field)}｜推荐老师：${escapeHtml(r.recommender)}</p>
         <p class="reason">${escapeHtml(r.reason)}</p>
       </div>
@@ -650,7 +654,7 @@ const WorkshopApp = (() => {
     return `<article class="report-card">
       <div class="report-date">${escapeHtml(event.event_time || event.issue || "时间待补充")}</div>
       <div>
-        <h2>${escapeHtml(event.expert_name || "专家姓名待补充")} <span class="meta">${escapeHtml(event.expert_title || "")}</span></h2>
+        <h2>${escapeHtml(event.expert_name || "专家姓名待补充")} <span class="meta">${escapeHtml([event.expert_title, event.talent_title].filter(Boolean).join(" / "))}</span></h2>
         <p class="meta">${escapeHtml(event.expert_affiliation || "单位待补充")}｜${escapeHtml(event.expert_field || "方向待补充")}</p>
         ${event.report_image ? `<img class="report-image" src="${event.report_image}" alt="${escapeHtml(event.expert_name || "报告")}现场图片">` : ""}
         <dl>
@@ -665,7 +669,7 @@ const WorkshopApp = (() => {
 
   function reportText(rows) {
     return rows.map((event, index) =>
-      `${index + 1}. ${event.event_time || event.issue || ""}，${event.expert_name || ""}，${event.expert_affiliation || ""}，报告题目：${event.talk_title || event.theme || ""}。`
+      `${index + 1}. ${event.event_time || event.issue || ""}，${event.expert_name || ""}，${event.expert_affiliation || ""}${event.talent_title ? "，" + event.talent_title : ""}，报告题目：${event.talk_title || event.theme || ""}。`
     ).join("\n") || "暂无已归档报告。";
   }
 

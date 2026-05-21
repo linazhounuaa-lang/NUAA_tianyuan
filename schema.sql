@@ -6,6 +6,7 @@ create table if not exists recommendations (
   expert_name text not null,
   expert_affiliation text not null,
   expert_title text,
+  talent_title text,
   expert_field text not null,
   category text,
   talk_title text,
@@ -27,6 +28,7 @@ create table if not exists current_workshop (
   expert_name text,
   expert_affiliation text,
   expert_title text,
+  talent_title text,
   expert_field text,
   talk_title text,
   event_time text,
@@ -53,6 +55,7 @@ create table if not exists events (
   expert_name text,
   expert_affiliation text,
   expert_title text,
+  talent_title text,
   expert_field text,
   talk_title text,
   location text,
@@ -65,6 +68,10 @@ create table if not exists events (
   report_image text,
   notes text
 );
+
+alter table recommendations add column if not exists talent_title text;
+alter table current_workshop add column if not exists talent_title text;
+alter table events add column if not exists talent_title text;
 
 alter table recommendations enable row level security;
 alter table current_workshop enable row level security;
