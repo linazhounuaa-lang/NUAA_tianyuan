@@ -1091,12 +1091,132 @@ const ProgressApp = (() => {
   async function initPublications() {
     await loadCloudData();
     renderPublicProfile();
+    renderResearchMap();
     renderProjects();
     renderPaperFilters();
     renderPapers();
     $("#paperSearch").addEventListener("input", renderPapers);
     $("#paperYear").addEventListener("change", renderPapers);
     $("#paperType").addEventListener("change", renderPapers);
+  }
+
+  function researchDirections() {
+    const base = "https://linazhouzhou.github.io/LinaZHOU.github.io/research";
+    return [
+      {
+        id: "scattering",
+        title: "复杂散射介质成像",
+        subtitle: "Scattering-media imaging",
+        image: "assets/research/media.png",
+        imageAlt: "动态浑浊介质中的鬼成像实验系统",
+        count: "3 篇代表论文",
+        years: "2022-2023",
+        idea: "面向生物组织、雾、浑浊液体等强散射场景，发展自校正单像素成像与鬼成像方法。",
+        route: ["散射扰动", "时域校正", "自校正重建", "高分辨成像"],
+        works: [
+          ["Self-corrected orthonormalized ghost imaging through dynamic and complex scattering media", `${base}/media1.pdf`],
+          ["High-resolution self-corrected single-pixel imaging through dynamic and complex scattering media", `${base}/media2.pdf`],
+          ["High-resolution ghost imaging through complex scattering media via a temporal correction", `${base}/media3.pdf`]
+        ]
+      },
+      {
+        id: "transmission",
+        title: "复杂介质光信息传输",
+        subtitle: "Optical information transmission",
+        image: "assets/research/trans1.png",
+        imageAlt: "自由空间光信息传输实验系统",
+        count: "12 篇代表论文",
+        years: "2021-2022",
+        idea: "将单像素探测、随机编码、动态缩放和频域调制结合，用于浑浊水、烟雾、厚组织和非视距环境中的高保真信息传输。",
+        route: ["随机编码", "单像素探测", "物理增强", "抗散射传输"],
+        works: [
+          ["Optical data transmission through highly dynamic and turbid water using dynamic scaling factors and single-pixel detector", `${base}/trans1.pdf`],
+          ["Accurate optical information transmission through thick tissues using zero-frequency modulation and single-pixel detection", `${base}/trans3.pdf`],
+          ["High-fidelity temporally-corrected transmission through dynamic smoke via pixel-to-plane data encoding", `${base}/trans6.pdf`],
+          ["Non-line-of-sight optical information transmission through turbid water", `${base}/trans12.pdf`]
+        ]
+      },
+      {
+        id: "security",
+        title: "光学信息安全",
+        subtitle: "Optical security and hiding",
+        image: "assets/research/secu.png",
+        imageAlt: "光学隐藏和全息安全示意图",
+        count: "2 篇代表论文",
+        years: "2021",
+        idea: "利用全息、随机相位、单输入多输出和二值振幅编码，实现光学隐藏、认证和物理层安全。",
+        route: ["秘密图像", "随机分发", "全息编码", "安全恢复"],
+        works: [
+          ["Optical hiding with visual cryptography and binary amplitude-only holograms", `${base}/secu1.pdf`],
+          ["Optical hiding based on single-input multiple-output and binary amplitude-only holograms", `${base}/secu2.pdf`]
+        ]
+      },
+      {
+        id: "machine-learning",
+        title: "机器学习与光学系统",
+        subtitle: "Machine learning for optics",
+        image: "assets/research/ml1.png",
+        imageAlt: "机器学习破解和识别光学密文的网络结构",
+        count: "5 篇代表论文",
+        years: "2019-2021",
+        idea: "用机器学习理解复杂散射、评估光学加密脆弱性，并探索学习驱动的光学认证与攻击检测。",
+        route: ["光学密文", "学习模型", "脆弱性检测", "认证/攻击"],
+        works: [
+          ["Learning-based optical authentication in complex scattering media", `${base}/ml1.pdf`],
+          ["Learning complex scattering media for optical encryption", `${base}/ml2.pdf`],
+          ["Vulnerability to machine learning attacks of optical encryption based on diffractive imaging", `${base}/ml3.pdf`],
+          ["Machine-learning attacks on interference-based optical encryption", `${base}/ml5.pdf`]
+        ]
+      },
+      {
+        id: "nanophotonics",
+        title: "纳米光子学与光控纳米结构",
+        subtitle: "Nanophotonics",
+        image: "assets/research/nanophotonics.png",
+        imageAlt: "金纳米线光控实验系统",
+        count: "2 篇代表论文",
+        years: "2017",
+        idea: "研究金属纳米线在光场调控下的断裂、焊接与纳米尺度光热效应，为微纳器件加工和可重构结构提供物理基础。",
+        route: ["纳米线", "光热调控", "可控断裂", "微纳加工"],
+        works: [
+          ["Optically controllable nanobreaking of metallic nanowires", `${base}/nanophotonics1.pdf`],
+          ["Light-Induced Pulling and Pushing by the Synergic Effect of Optical Force and Photophoretic Force", `${base}/nanophotonics2.pdf`]
+        ]
+      }
+    ];
+  }
+
+  function renderResearchMap() {
+    const tabs = $("#researchTabs");
+    const target = $("#researchDirections");
+    if (!tabs || !target) return;
+    const directions = researchDirections();
+    tabs.innerHTML = directions.map(direction => `<a href="#research-${direction.id}">${escapeHtml(direction.title)}</a>`).join("");
+    target.innerHTML = directions.map(researchDirectionCard).join("");
+  }
+
+  function researchDirectionCard(direction) {
+    return `<article class="research-card" id="research-${escapeHtml(direction.id)}">
+      <div class="research-media">
+        <img src="${escapeHtml(direction.image)}" alt="${escapeHtml(direction.imageAlt)}">
+      </div>
+      <div class="research-content">
+        <div class="research-title-row">
+          <div>
+            <p class="eyebrow">${escapeHtml(direction.subtitle)}</p>
+            <h3>${escapeHtml(direction.title)}</h3>
+          </div>
+          <span class="pill ok">${escapeHtml(direction.count)}</span>
+        </div>
+        <p>${escapeHtml(direction.idea)}</p>
+        <div class="research-flow">
+          ${direction.route.map(step => `<span>${escapeHtml(step)}</span>`).join("")}
+        </div>
+        <div class="research-work-list">
+          ${direction.works.map(([title, href]) => `<a href="${escapeHtml(href)}" target="_blank" rel="noopener">${escapeHtml(title)}</a>`).join("")}
+        </div>
+      </div>
+    </article>`;
   }
 
   function renderPublicProfile() {
