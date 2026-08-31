@@ -78,14 +78,16 @@ nav a[aria-current="page"], nav a:hover { color: #fff; background: rgba(255,255,
 .academic-hero {
   position: relative;
   display: block;
-  min-height: 420px;
+  min-height: 520px;
   margin: 0 calc(50% - 50vw) 24px;
   padding: 72px max(32px, calc((100vw - 1180px) / 2 + 16px)) 56px;
   overflow: hidden;
   color: #fff;
   background:
-    linear-gradient(90deg, rgba(4,17,36,.94) 0%, rgba(5,30,55,.86) 34%, rgba(5,30,55,.34) 74%, rgba(4,17,36,.12) 100%),
-    url("assets/visuals/photonics-hero-v2.png") center / cover no-repeat;
+    radial-gradient(circle at 18% 48%, rgba(4,17,36,.84), rgba(4,17,36,.42) 36%, transparent 62%),
+    linear-gradient(90deg, rgba(4,17,36,.82) 0%, rgba(5,30,55,.42) 34%, rgba(5,30,55,.06) 72%),
+    url("assets/visuals/photonics-hero-v2.png") center right / contain no-repeat,
+    #041124;
 }
 .academic-hero::after {
   content: "";
@@ -110,14 +112,16 @@ nav a[aria-current="page"], nav a:hover { color: #fff; background: rgba(255,255,
 }
 .share-hero {
   position: relative;
-  min-height: 360px;
+  min-height: 500px;
   margin: 0 calc(50% - 50vw) 24px;
   padding: 72px max(32px, calc((100vw - 1180px) / 2 + 16px)) 56px;
   overflow: hidden;
   color: #fff;
   background:
-    linear-gradient(90deg, rgba(4,17,36,.95) 0%, rgba(5,31,58,.82) 38%, rgba(5,31,58,.28) 78%, rgba(4,17,36,.1) 100%),
-    url("assets/visuals/literature-hero.png") center / cover no-repeat;
+    radial-gradient(circle at 18% 48%, rgba(4,17,36,.86), rgba(4,17,36,.42) 36%, transparent 62%),
+    linear-gradient(90deg, rgba(4,17,36,.84) 0%, rgba(5,31,58,.44) 38%, rgba(5,31,58,.06) 78%),
+    url("assets/visuals/literature-hero.png") center right / contain no-repeat,
+    #041124;
 }
 .share-hero::after {
   content: "";
@@ -380,6 +384,12 @@ button.danger { border-color: #d88f80; color: #9d2c1c; }
   .form-grid, .stats, .toolbar, .publication-toolbar, .grid-two, .lab-hero, .card-grid, .review-row, .research-card, .research-flow { grid-template-columns: 1fr; }
   .research-hero-visual { grid-template-columns: 1fr; }
   .research-hero-visual img:first-child { grid-row: auto; }
+  .academic-hero, .share-hero {
+    min-height: 560px;
+    padding-top: 56px;
+    background-position: center bottom;
+    background-size: 150% auto;
+  }
   .inline-form { flex-direction: column; align-items: stretch; }
   .research-title-row { flex-direction: column; }
   .research-flow span + span::before { content: ""; }
