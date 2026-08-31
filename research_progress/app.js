@@ -1089,9 +1089,13 @@ const ProgressApp = (() => {
   }
 
   async function initPublications() {
-    await loadCloudData();
     renderPublicProfile();
     renderResearchMap();
+    renderProjects();
+    renderPaperFilters();
+    renderPapers();
+    await loadCloudData();
+    renderPublicProfile();
     renderProjects();
     renderPaperFilters();
     renderPapers();
