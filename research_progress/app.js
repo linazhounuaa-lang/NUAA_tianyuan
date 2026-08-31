@@ -1358,10 +1358,7 @@ const ProgressApp = (() => {
         years: "Emerging",
         idea: "面向太赫兹波段的信息获取、成像与器件调控，探索微波光子学、材料响应和计算成像的交叉方法。Terahertz imaging is positioned as an emerging bridge between photonics, materials and sensing.",
         route: ["太赫兹源", "材料响应", "成像探测", "智能分析"],
-        works: [
-          ["Terahertz photonics and imaging / 太赫兹光子学与成像", ""],
-          ["THz sensing with photonic and material platforms / 光子-材料平台太赫兹传感", ""]
-        ]
+        works: []
       },
       {
         id: "2d-materials",
@@ -1373,10 +1370,7 @@ const ProgressApp = (() => {
         years: "Emerging",
         idea: "关注二维材料中的光电响应、非线性效应和器件集成，将材料物性与微波光子、太赫兹和成像系统连接起来。This direction emphasizes material-device-system co-design.",
         route: ["二维材料", "光电响应", "器件集成", "系统应用"],
-        works: [
-          ["2D-material photodetectors and modulators / 二维材料探测与调制器件", ""],
-          ["Material-enabled photonic devices / 材料赋能光子器件", ""]
-        ]
+        works: []
       },
       {
         id: "nonlinear-imaging",
@@ -1388,10 +1382,7 @@ const ProgressApp = (() => {
         years: "Emerging",
         idea: "探索非线性光学效应在高对比度成像、材料表征和复杂环境探测中的作用，形成从光场调控到图像重建的研究链条。",
         route: ["非线性响应", "光场调控", "信号增强", "多维成像"],
-        works: [
-          ["Nonlinear optical imaging / 非线性光学成像", ""],
-          ["Nonlinear photonic sensing and characterization / 非线性光子传感与表征", ""]
-        ]
+        works: []
       },
       {
         id: "nanophotonics",
@@ -1421,6 +1412,7 @@ const ProgressApp = (() => {
   }
 
   function researchDirectionCard(direction) {
+    const linkedWorks = direction.works.filter(([, href]) => href);
     return `<article class="research-card" id="research-${escapeHtml(direction.id)}">
       <div class="research-media">
         <img src="${escapeHtml(direction.image)}" alt="${escapeHtml(direction.imageAlt)}">
@@ -1437,9 +1429,9 @@ const ProgressApp = (() => {
         <div class="research-flow">
           ${direction.route.map(step => `<span>${escapeHtml(step)}</span>`).join("")}
         </div>
-        <div class="research-work-list">
-          ${direction.works.map(([title, href]) => href ? `<a href="${escapeHtml(href)}" target="_blank" rel="noopener">${escapeHtml(title)}</a>` : `<span>${escapeHtml(title)}</span>`).join("")}
-        </div>
+        ${linkedWorks.length ? `<div class="research-work-list">
+          ${linkedWorks.map(([title, href]) => `<a href="${escapeHtml(href)}" target="_blank" rel="noopener">${escapeHtml(title)}</a>`).join("")}
+        </div>` : ""}
       </div>
     </article>`;
   }
