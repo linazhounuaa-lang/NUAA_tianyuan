@@ -43,7 +43,7 @@ values (
   '南京航空航天大学微波光子学实验室 副教授',
   '周莉娜博士主要从事光子学与光学成像研究，研究方向包括单像素成像、鬼成像、散射介质成像、信息光子学、光学加密与认证，以及人工智能赋能的光子学系统。现任南京航空航天大学副教授，承担本科生《数字逻辑电路》和博士生《非线性光学》等课程。',
   'https://scholar.google.com/citations?user=HYJKgg4AAAAJ&hl=en&oi=ao',
-  'linazhou@polyu.edu.hk',
+  'linazhou@nuaa.edu.cn',
   '光学成像；单像素成像；鬼成像；散射介质成像；信息光子学；光学加密；AI for Photonics'
 )
 on conflict (id) do update set

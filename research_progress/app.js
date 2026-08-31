@@ -209,7 +209,7 @@ const ProgressApp = (() => {
       google_scholar: "https://scholar.google.com/citations?user=HYJKgg4AAAAJ&hl=en&oi=ao",
       personal_homepage: "",
       orcid: "",
-      email: "linazhou@polyu.edu.hk",
+      email: "linazhou@nuaa.edu.cn",
       research_keywords: "光学成像；单像素成像；鬼成像；散射介质成像；信息光子学；光学加密；AI for Photonics"
     });
   }
