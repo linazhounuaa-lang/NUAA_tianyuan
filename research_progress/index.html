@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Research Progress - 南京航空航天大学微波光子学实验室</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <strong>南京航空航天大学微波光子学实验室</strong>
+      <span>Microwave Photonics Laboratory, NUAA</span>
+    </a>
+    <nav>
+      <a aria-current="page" href="index.html">进展提交</a>
+      <a href="publications.html">学术主页与论文</a>
+      <a href="admin.html">负责人后台</a>
+    </nav>
+  </header>
+
+  <main class="page narrow">
+    <section class="hero">
+      <p class="eyebrow">Research Progress</p>
+      <h1>学生科研进展提交</h1>
+      <p>请按周或按阶段提交研究进展、遇到的问题和下一步计划。提交后仅负责人后台可见。</p>
+    </section>
+
+    <form id="progressForm" class="panel form-grid">
+      <label>学生姓名 <input required name="student_name" autocomplete="name"></label>
+      <label>年级/身份
+        <select required name="student_level">
+          <option value="">请选择</option>
+          <option>本科生</option><option>硕士生</option><option>博士生</option><option>博士后</option><option>访问学生</option><option>其他</option>
+        </select>
+      </label>
+      <label>研究方向
+        <select required name="research_direction" data-research-directions>
+          <option value="">请选择</option>
+        </select>
+      </label>
+      <label>汇报周期 <input required name="period" placeholder="如：2026年第35周 / 2026年9月"></label>
+      <label>课题题目 <input required name="project_title" placeholder="如：微波光子雷达信号处理"></label>
+      <label>导师/指导老师 <input name="advisor" placeholder="选填"></label>
+      <label class="wide">本阶段完成内容
+        <textarea required name="completed_work" rows="5" placeholder="实验、仿真、理论推导、论文阅读、数据处理等"></textarea>
+      </label>
+      <label class="wide">关键结果或证据
+        <textarea required name="key_results" rows="4" placeholder="请写清楚数据、图表、结论或阶段性发现"></textarea>
+      </label>
+      <label class="wide">遇到的问题
+        <textarea name="blockers" rows="4" placeholder="技术问题、设备问题、论文卡点、需要老师判断的问题"></textarea>
+      </label>
+      <label class="wide">下一步计划
+        <textarea required name="next_plan" rows="4" placeholder="下一周/下一阶段准备做什么"></textarea>
+      </label>
+      <label>进展状态
+        <select name="status">
+          <option>进行中</option><option>需要讨论</option><option>等待实验条件</option><option>准备投稿</option><option>已完成阶段目标</option>
+        </select>
+      </label>
+      <label>附件链接 <input name="attachment_url" placeholder="可填腾讯文档、坚果云、Google Drive、论文链接等"></label>
+      <label class="wide">备注
+        <textarea name="notes" rows="3"></textarea>
+      </label>
+      <div class="actions wide">
+        <button class="primary" type="submit">提交进展</button>
+        <p id="submitMessage" role="status"></p>
+      </div>
+    </form>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+  <script>ProgressApp.initProgressForm();</script>
+</body>
+</html>

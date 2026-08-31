@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>负责人后台 - Research Progress</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <strong>南京航空航天大学微波光子学实验室</strong>
+      <span>Microwave Photonics Laboratory, NUAA</span>
+    </a>
+    <nav>
+      <a href="index.html">进展提交</a>
+      <a href="publications.html">学术主页与论文</a>
+      <a aria-current="page" href="admin.html">负责人后台</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section id="loginPanel" class="panel login">
+      <h1>负责人后台</h1>
+      <p>请输入后台口令。默认口令可在 <code>app.js</code> 顶部修改。</p>
+      <form id="loginForm" class="inline-form">
+        <input type="password" name="password" placeholder="后台口令" required>
+        <button class="primary" type="submit">进入</button>
+      </form>
+      <p id="loginMessage" class="muted"></p>
+    </section>
+
+    <section id="adminApp" class="hidden">
+      <section class="hero compact">
+        <p class="eyebrow">Lab Management</p>
+        <h1>科研进展与论文主页管理</h1>
+        <p>查看学生进展，记录反馈意见，维护公开论文列表和学术主页链接。</p>
+      </section>
+
+      <section class="stats" id="stats"></section>
+
+      <section class="toolbar panel">
+        <input id="searchInput" placeholder="搜索学生、方向、课题、问题">
+        <select id="directionFilter"><option value="">全部方向</option></select>
+        <select id="reviewFilter">
+          <option value="">全部审核状态</option>
+          <option>未读</option><option>已阅读</option><option>需面谈</option><option>已反馈</option><option>已归档</option>
+        </select>
+        <button id="copySummary" type="button">复制进展摘要</button>
+        <button id="exportCsv" type="button">导出 CSV</button>
+        <button id="seedData" type="button">加入测试数据</button>
+      </section>
+
+      <section class="panel">
+        <div class="section-head">
+          <h2>学生 Research Progress</h2>
+          <span id="progressCount" class="muted"></span>
+        </div>
+        <div id="progressList" class="progress-list"></div>
+      </section>
+
+      <section class="grid-two">
+        <div class="panel">
+          <div class="section-head">
+            <h2>学术主页信息</h2>
+            <button id="saveProfile" type="button">保存主页信息</button>
+          </div>
+          <form id="profileForm" class="form-grid single"></form>
+        </div>
+        <div class="panel">
+          <div class="section-head">
+            <h2>论文列表</h2>
+            <button id="addPaper" type="button">新增论文</button>
+          </div>
+          <div id="paperEditor" class="paper-editor"></div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+  <script>ProgressApp.initAdmin();</script>
+</body>
+</html>

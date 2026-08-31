@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>学术主页与论文 - 南京航空航天大学微波光子学实验室</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <strong>南京航空航天大学微波光子学实验室</strong>
+      <span>Microwave Photonics Laboratory, NUAA</span>
+    </a>
+    <nav>
+      <a href="index.html">进展提交</a>
+      <a aria-current="page" href="publications.html">学术主页与论文</a>
+      <a href="admin.html">负责人后台</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section class="lab-hero">
+      <div>
+        <p class="eyebrow">Academic Profile</p>
+        <h1 id="profileName">学术主页与代表性论文</h1>
+        <p id="profileBio">展示 Google Scholar、ORCID、个人主页和代表性论文。</p>
+        <div id="profileLinks" class="link-row"></div>
+      </div>
+      <div class="hero-visual" aria-hidden="true"><span></span><span></span><span></span></div>
+    </section>
+
+    <section class="toolbar panel publication-toolbar">
+      <input id="paperSearch" placeholder="搜索题目、期刊、作者、关键词">
+      <select id="paperYear"><option value="">全部年份</option></select>
+      <select id="paperType"><option value="">全部类型</option><option>期刊论文</option><option>会议论文</option><option>预印本</option><option>专利</option><option>项目成果</option></select>
+    </section>
+
+    <section class="paper-list" id="paperList"></section>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+  <script>ProgressApp.initPublications();</script>
+</body>
+</html>
