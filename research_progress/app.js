@@ -103,23 +103,37 @@ const ProgressApp = (() => {
     await storageRequest(`object/${STORAGE_BUCKET}/${encodeURIComponent(path).replaceAll("%2F", "/")}`, { method: "DELETE" });
   }
 
-  async function loadCloudData() {
-    if (!cloudEnabled()) return;
+  async function safeCloudRead(path, fallback = []) {
     try {
-      const [progress, profile, papers, projects] = await Promise.all([
-        cloudRequest("research_progress?select=*&order=created_at.desc"),
-        cloudRequest("research_profile?select=*&id=eq.1"),
-        cloudRequest("research_papers?select=*&order=year.desc,created_at.desc"),
-        cloudRequest("research_projects?select=*&order=created_at.desc")
-      ]);
-      write(KEYS.progress, progress || []);
-      if (profile?.[0]) write(KEYS.profile, profile[0]);
-      write(KEYS.papers, papers || []);
-      write(KEYS.projects, projects || []);
+      const data = await cloudRequest(path);
+      return { ok: true, data: data ?? fallback };
     } catch (error) {
       console.error(error);
-      alert("云端数据读取失败，当前将使用本机缓存数据。");
+      return { ok: false, data: fallback, error };
     }
+  }
+
+  async function loadCloudData({ quiet = false } = {}) {
+    if (!cloudEnabled()) return;
+    const [progress, profile, papers, projects] = await Promise.all([
+      safeCloudRead("research_progress?select=*&order=created_at.desc", progressItems()),
+      safeCloudRead("research_profile?select=*&id=eq.1", []),
+      safeCloudRead("research_papers?select=*&order=year.desc,created_at.desc", papers()),
+      safeCloudRead("research_projects?select=*&order=created_at.desc", projects())
+    ]);
+    if (progress.ok) write(KEYS.progress, progress.data || []);
+    if (profile.ok && profile.data?.[0]) write(KEYS.profile, profile.data[0]);
+    if (papers.ok) write(KEYS.papers, papers.data || []);
+    if (projects.ok) write(KEYS.projects, projects.data || []);
+    if (!quiet && [progress, profile, papers, projects].some(result => !result.ok)) {
+      showCloudNotice("部分云端数据暂时无法读取，已先显示本机缓存。请确认 Supabase 已执行 schema.sql。");
+    }
+  }
+
+  function showCloudNotice(message) {
+    const target = $("#cloudNotice");
+    if (target) target.textContent = message;
+    else console.warn(message);
   }
 
   async function cloudInsert(table, row) {
@@ -713,7 +727,6 @@ const ProgressApp = (() => {
   }
 
   async function initProgressForm() {
-    await loadCloudData();
     populateDirections();
     $("#progressForm").addEventListener("submit", async event => {
       event.preventDefault();
