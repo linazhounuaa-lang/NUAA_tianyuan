@@ -14,6 +14,10 @@ create table if not exists research_progress (
   next_plan text,
   status text,
   attachment_url text,
+  attachment_name text,
+  attachment_path text,
+  attachment_size bigint,
+  attachment_type text,
   notes text,
   review_status text default '未读',
   feedback text
@@ -64,6 +68,16 @@ create table if not exists research_papers (
 );
 
 alter table research_progress add column if not exists report_date date;
+alter table research_progress add column if not exists attachment_name text;
+alter table research_progress add column if not exists attachment_path text;
+alter table research_progress add column if not exists attachment_size bigint;
+alter table research_progress add column if not exists attachment_type text;
+
+insert into storage.buckets (id, name, public, file_size_limit)
+values ('progress-attachments', 'progress-attachments', true, 52428800)
+on conflict (id) do update set
+  public = excluded.public,
+  file_size_limit = excluded.file_size_limit;
 
 create table if not exists research_projects (
   id uuid primary key default gen_random_uuid(),
@@ -89,6 +103,16 @@ create policy "research_progress public read" on research_progress for select us
 create policy "research_progress public insert" on research_progress for insert with check (true);
 create policy "research_progress public update" on research_progress for update using (true);
 create policy "research_progress public delete" on research_progress for delete using (true);
+
+drop policy if exists "progress_attachments public read" on storage.objects;
+drop policy if exists "progress_attachments public upload" on storage.objects;
+drop policy if exists "progress_attachments public delete" on storage.objects;
+create policy "progress_attachments public read" on storage.objects
+  for select using (bucket_id = 'progress-attachments');
+create policy "progress_attachments public upload" on storage.objects
+  for insert with check (bucket_id = 'progress-attachments');
+create policy "progress_attachments public delete" on storage.objects
+  for delete using (bucket_id = 'progress-attachments');
 
 drop policy if exists "research_profile public read" on research_profile;
 drop policy if exists "research_profile public insert" on research_profile;

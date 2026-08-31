@@ -1,6 +1,8 @@
 const ProgressApp = (() => {
   const ADMIN_PASSWORD = "progress2026";
   const config = window.PROGRESS_CONFIG || {};
+  const STORAGE_BUCKET = "progress-attachments";
+  const MAX_UPLOAD_SIZE = 50 * 1024 * 1024;
   const KEYS = {
     progress: "lab_progress_items",
     profile: "lab_profile",
@@ -48,6 +50,57 @@ const ProgressApp = (() => {
     if (response.status === 204) return null;
     const text = await response.text();
     return text ? JSON.parse(text) : null;
+  }
+
+  async function storageRequest(path, options = {}) {
+    if (!cloudEnabled()) return null;
+    const response = await fetch(`${config.supabaseUrl.replace(/\/$/, "")}/storage/v1/${path}`, {
+      ...options,
+      headers: {
+        apikey: config.supabaseAnonKey,
+        Authorization: `Bearer ${config.supabaseAnonKey}`,
+        ...(options.headers || {})
+      }
+    });
+    if (!response.ok) throw new Error(`Storage request failed ${response.status}: ${await response.text()}`);
+    if (response.status === 204) return null;
+    const text = await response.text();
+    return text ? JSON.parse(text) : null;
+  }
+
+  function publicStorageUrl(path) {
+    return `${config.supabaseUrl.replace(/\/$/, "")}/storage/v1/object/public/${STORAGE_BUCKET}/${path}`;
+  }
+
+  function cleanFileName(name) {
+    return String(name || "attachment").replace(/[^\w.\-\u4e00-\u9fa5]/g, "_").slice(0, 120);
+  }
+
+  async function uploadAttachment(file, progressId) {
+    if (!file || !file.size) return null;
+    if (!cloudEnabled()) throw new Error("附件上传需要先配置 Supabase。");
+    if (file.size > MAX_UPLOAD_SIZE) throw new Error("附件不能超过 50 MB。");
+    const path = `${progressId}/${Date.now()}-${cleanFileName(file.name)}`;
+    await storageRequest(`object/${STORAGE_BUCKET}/${encodeURIComponent(path).replaceAll("%2F", "/")}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": file.type || "application/octet-stream",
+        "x-upsert": "false"
+      },
+      body: file
+    });
+    return {
+      attachment_name: file.name,
+      attachment_path: path,
+      attachment_size: file.size,
+      attachment_type: file.type || "",
+      attachment_url: publicStorageUrl(path)
+    };
+  }
+
+  async function deleteAttachment(path) {
+    if (!path || !cloudEnabled()) return;
+    await storageRequest(`object/${STORAGE_BUCKET}/${encodeURIComponent(path).replaceAll("%2F", "/")}`, { method: "DELETE" });
   }
 
   async function loadCloudData() {
@@ -664,23 +717,35 @@ const ProgressApp = (() => {
     populateDirections();
     $("#progressForm").addEventListener("submit", async event => {
       event.preventDefault();
+      const submitButton = event.currentTarget.querySelector("button[type='submit']");
+      const file = event.currentTarget.elements.attachment_file?.files?.[0] || null;
+      submitButton.disabled = true;
+      $("#submitMessage").textContent = file ? "正在上传附件并提交，请稍候..." : "正在提交，请稍候...";
+      const data = formData(event.currentTarget);
+      delete data.attachment_file;
       const row = {
         id: uid(),
         created_at: new Date().toISOString(),
-        ...formData(event.currentTarget),
+        ...data,
         review_status: "未读",
         feedback: ""
       };
       row.report_date = row.period || null;
-      write(KEYS.progress, [row, ...progressItems()]);
       try {
+        const attachment = await uploadAttachment(file, row.id);
+        if (attachment) Object.assign(row, attachment);
+        write(KEYS.progress, [row, ...progressItems()]);
         await cloudInsert("research_progress", row);
+        event.currentTarget.reset();
+        $("#submitMessage").textContent = "提交成功，附件已上传，老师将在后台查看并下载。";
       } catch (error) {
         console.error(error);
-        alert("云端保存失败，但数据已临时保存在本机。");
+        if (!file) write(KEYS.progress, [row, ...progressItems()]);
+        alert(file ? "附件上传或云端保存失败，请稍后重试，或先使用附件链接提交。" : "云端保存失败，但数据已临时保存在本机。");
+        $("#submitMessage").textContent = "提交未完全成功，请按提示处理。";
+      } finally {
+        submitButton.disabled = false;
       }
-      event.currentTarget.reset();
-      $("#submitMessage").textContent = "提交成功，老师将在后台查看并反馈。";
     });
   }
 
@@ -762,6 +827,7 @@ const ProgressApp = (() => {
   function progressCard(item) {
     const warn = item.review_status === "未读" || item.review_status === "需面谈";
     const dateText = progressReportDate(item);
+    const attachmentLink = progressAttachmentLink(item);
     return `<article class="progress-card">
       <div class="section-head">
         <div>
@@ -776,7 +842,7 @@ const ProgressApp = (() => {
         ${noteBlock("遇到的问题", item.blockers || "无")}
         ${noteBlock("下一步计划", item.next_plan)}
       </div>
-      <p class="meta">导师/指导老师：${escapeHtml(item.advisor || "未填写")} ${item.attachment_url ? `｜<a href="${escapeHtml(item.attachment_url)}" target="_blank" rel="noopener">附件链接</a>` : ""}</p>
+      <p class="meta">导师/指导老师：${escapeHtml(item.advisor || "未填写")} ${attachmentLink}</p>
       <div class="review-row">
         <select data-id="${item.id}" data-progress-field="review_status">
           ${["未读","已阅读","需面谈","已反馈","已归档"].map(status => `<option ${status === item.review_status ? "selected" : ""}>${status}</option>`).join("")}
@@ -795,6 +861,20 @@ const ProgressApp = (() => {
     return item.report_date || item.period || "";
   }
 
+  function progressAttachmentLink(item) {
+    if (!item.attachment_url) return "";
+    const label = item.attachment_name ? `下载附件：${item.attachment_name}` : "附件链接";
+    const size = item.attachment_size ? `（${formatFileSize(item.attachment_size)}）` : "";
+    return `｜<a href="${escapeHtml(item.attachment_url)}" target="_blank" rel="noopener" download>${escapeHtml(label)}${escapeHtml(size)}</a>`;
+  }
+
+  function formatFileSize(bytes) {
+    const value = Number(bytes) || 0;
+    if (value >= 1024 * 1024) return `${(value / 1024 / 1024).toFixed(1)} MB`;
+    if (value >= 1024) return `${(value / 1024).toFixed(1)} KB`;
+    return `${value} B`;
+  }
+
   async function updateProgressField(event) {
     const { id, progressField } = event.currentTarget.dataset;
     const value = event.currentTarget.value;
@@ -807,8 +887,12 @@ const ProgressApp = (() => {
   async function deleteProgress(event) {
     const id = event.currentTarget.dataset.progressDelete;
     if (!confirm("确定删除这条进展记录吗？")) return;
+    const current = progressItems().find(item => item.id === id);
     write(KEYS.progress, progressItems().filter(item => item.id !== id));
-    try { await cloudDelete("research_progress", id); }
+    try {
+      await cloudDelete("research_progress", id);
+      await deleteAttachment(current?.attachment_path);
+    }
     catch (error) { console.error(error); alert("云端删除失败，当前只删除了本机缓存。"); }
     renderProgress();
   }
@@ -1029,7 +1113,7 @@ const ProgressApp = (() => {
   }
 
   function exportProgressCsv() {
-    const headers = ["created_at","student_name","student_level","research_direction","report_date","project_title","advisor","completed_work","key_results","blockers","next_plan","status","review_status","feedback","attachment_url","notes"];
+    const headers = ["created_at","student_name","student_level","research_direction","report_date","project_title","advisor","completed_work","key_results","blockers","next_plan","status","review_status","feedback","attachment_name","attachment_url","notes"];
     const exportRows = progressItems().map(row => ({ ...row, report_date: progressReportDate(row) }));
     const lines = [headers.join(",")].concat(exportRows.map(row => headers.map(h => `"${String(row[h] || "").replaceAll('"', '""')}"`).join(",")));
     const blob = new Blob(["\ufeff" + lines.join("\n")], { type: "text/csv;charset=utf-8" });

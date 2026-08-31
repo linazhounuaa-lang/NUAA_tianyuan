@@ -59,7 +59,10 @@
           <option>进行中</option><option>需要讨论</option><option>等待实验条件</option><option>准备投稿</option><option>已完成阶段目标</option>
         </select>
       </label>
-      <label>附件链接 <input name="attachment_url" placeholder="可填腾讯文档、坚果云、Google Drive、论文链接等"></label>
+      <label>上传附件
+        <input type="file" name="attachment_file" accept=".ppt,.pptx,.doc,.docx,.pdf,.xls,.xlsx,.zip">
+      </label>
+      <label>附件链接 <input name="attachment_url" placeholder="也可粘贴腾讯文档、网盘、论文链接等"></label>
       <label class="wide">备注
         <textarea name="notes" rows="3"></textarea>
       </label>
