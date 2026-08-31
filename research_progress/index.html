@@ -23,7 +23,7 @@
     <section class="hero">
       <p class="eyebrow">Research Progress</p>
       <h1>学生科研进展提交</h1>
-      <p>请按周或按阶段提交研究进展、遇到的问题和下一步计划。提交后仅负责人后台可见。</p>
+      <p>请提交研究进展、遇到的问题和下一步计划。文字进展组内可见，上传附件仅负责人后台可下载。</p>
     </section>
 
     <form id="progressForm" class="panel form-grid">
@@ -71,6 +71,14 @@
         <p id="submitMessage" role="status"></p>
       </div>
     </form>
+
+    <section class="panel shared-progress-panel">
+      <div class="section-head">
+        <h2>组内进展墙</h2>
+        <span id="sharedProgressCount" class="muted"></span>
+      </div>
+      <div id="sharedProgressList" class="progress-list"></div>
+    </section>
   </main>
 
   <script src="config.js"></script>

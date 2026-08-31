@@ -136,6 +136,12 @@ const ProgressApp = (() => {
     else console.warn(message);
   }
 
+  async function loadProgressOnly() {
+    if (!cloudEnabled()) return;
+    const progress = await safeCloudRead("research_progress?select=*&order=created_at.desc", progressItems());
+    if (progress.ok) write(KEYS.progress, progress.data || []);
+  }
+
   async function cloudInsert(table, row) {
     return cloudRequest(table, {
       method: "POST",
@@ -727,7 +733,9 @@ const ProgressApp = (() => {
   }
 
   async function initProgressForm() {
+    await loadProgressOnly();
     populateDirections();
+    renderSharedProgress();
     $("#progressForm").addEventListener("submit", async event => {
       event.preventDefault();
       const submitButton = event.currentTarget.querySelector("button[type='submit']");
@@ -750,16 +758,50 @@ const ProgressApp = (() => {
         write(KEYS.progress, [row, ...progressItems()]);
         await cloudInsert("research_progress", row);
         event.currentTarget.reset();
-        $("#submitMessage").textContent = "提交成功，附件已上传，老师将在后台查看并下载。";
+        $("#submitMessage").textContent = file ? "提交成功，附件已上传，老师将在后台查看并下载。" : "提交成功，文字进展已更新到组内进展墙。";
+        renderSharedProgress();
       } catch (error) {
         console.error(error);
-        if (!file) write(KEYS.progress, [row, ...progressItems()]);
+        if (!file) {
+          write(KEYS.progress, [row, ...progressItems()]);
+          renderSharedProgress();
+        }
         alert(file ? "附件上传或云端保存失败，请稍后重试，或先使用附件链接提交。" : "云端保存失败，但数据已临时保存在本机。");
         $("#submitMessage").textContent = "提交未完全成功，请按提示处理。";
       } finally {
         submitButton.disabled = false;
       }
     });
+  }
+
+  function sharedProgressItems() {
+    return progressItems().filter(item => item.review_status !== "已归档");
+  }
+
+  function renderSharedProgress() {
+    const list = $("#sharedProgressList");
+    if (!list) return;
+    const rows = sharedProgressItems();
+    $("#sharedProgressCount").textContent = rows.length ? `${rows.length} 条文字进展` : "";
+    list.innerHTML = rows.length ? rows.map(sharedProgressCard).join("") : `<div class="empty-state">暂无组内进展。</div>`;
+  }
+
+  function sharedProgressCard(item) {
+    return `<article class="progress-card public-progress-card">
+      <div class="section-head">
+        <div>
+          <h3>${escapeHtml(item.student_name || "未填写姓名")}｜${escapeHtml(item.project_title || "未填写课题")}</h3>
+          <p class="meta">${escapeHtml(item.student_level || "身份待补充")}｜${escapeHtml(item.research_direction || "方向待补充")}｜汇报日期：${escapeHtml(progressReportDate(item))}</p>
+        </div>
+        <span class="pill">${escapeHtml(item.status || "进行中")}</span>
+      </div>
+      <div class="card-grid">
+        ${noteBlock("完成内容", item.completed_work || "未填写")}
+        ${noteBlock("关键结果", item.key_results || "未填写")}
+        ${noteBlock("遇到的问题", item.blockers || "无")}
+        ${noteBlock("下一步计划", item.next_plan || "未填写")}
+      </div>
+    </article>`;
   }
 
   async function initAdmin() {
