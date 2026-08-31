@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>学术主页与论文 - 南京航空航天大学微波光子学实验室</title>
-  <link rel="stylesheet" href="styles.css?v=20260831-demo1">
+  <link rel="stylesheet" href="styles.css?v=20260901-share1">
 </head>
 <body>
   <header class="topbar">
@@ -14,6 +14,7 @@
     </a>
     <nav>
       <a href="index.html">进展提交</a>
+      <a href="share.html">文献分享</a>
       <a aria-current="page" href="publications.html">学术主页与论文</a>
       <a href="admin.html">负责人后台</a>
     </nav>
@@ -23,17 +24,21 @@
     <section class="lab-hero">
       <div>
         <p class="eyebrow">Academic Profile</p>
-        <h1 id="profileName">学术主页与代表性论文</h1>
-        <p id="profileBio">展示 Google Scholar、ORCID、个人主页和代表性论文。</p>
+        <h1 id="profileName">学术主页与代表性论文 / Academic Profile</h1>
+        <p id="profileBio">展示 Google Scholar、ORCID、个人主页和代表性论文。View research profile, projects, representative works and publications.</p>
         <div id="profileLinks" class="link-row"></div>
         <p id="cloudNotice" class="muted"></p>
       </div>
-      <div class="hero-visual" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="research-hero-visual" aria-hidden="true">
+        <img src="assets/research/media.png" alt="">
+        <img src="assets/research/trans1.png" alt="">
+        <img src="assets/research/ml1.png" alt="">
+      </div>
     </section>
 
     <section class="panel project-overview">
       <div class="section-head">
-        <h2>科研项目</h2>
+        <h2>科研项目 / Research Projects</h2>
         <span class="muted">Research Projects</span>
       </div>
       <div class="project-list" id="projectList"></div>
@@ -41,7 +46,7 @@
 
     <section class="panel research-map">
       <div class="section-head">
-        <h2>研究方向可视化</h2>
+        <h2>研究方向可视化 / Research Landscape</h2>
         <span class="muted">Research Landscape</span>
       </div>
       <div class="research-tabs" id="researchTabs"></div>
@@ -57,8 +62,8 @@
     <section class="paper-list" id="paperList"></section>
   </main>
 
-  <script src="config.js?v=20260831-demo1"></script>
-  <script src="app.js?v=20260831-demo1"></script>
+  <script src="config.js?v=20260901-share1"></script>
+  <script src="app.js?v=20260901-share1"></script>
   <script>ProgressApp.initPublications();</script>
 </body>
 </html>

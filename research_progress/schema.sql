@@ -79,6 +79,12 @@ on conflict (id) do update set
   public = excluded.public,
   file_size_limit = excluded.file_size_limit;
 
+insert into storage.buckets (id, name, public, file_size_limit)
+values ('shared-resources', 'shared-resources', true, 52428800)
+on conflict (id) do update set
+  public = excluded.public,
+  file_size_limit = excluded.file_size_limit;
+
 create table if not exists research_projects (
   id uuid primary key default gen_random_uuid(),
   created_at timestamptz not null default now(),
@@ -90,10 +96,29 @@ create table if not exists research_projects (
   description text
 );
 
+create table if not exists shared_resources (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  contributor text not null,
+  resource_type text,
+  research_direction text,
+  year text,
+  title text not null,
+  summary text,
+  keywords text,
+  resource_url text,
+  file_url text,
+  file_name text,
+  file_path text,
+  file_size bigint,
+  file_type text
+);
+
 alter table research_progress enable row level security;
 alter table research_profile enable row level security;
 alter table research_papers enable row level security;
 alter table research_projects enable row level security;
+alter table shared_resources enable row level security;
 
 drop policy if exists "research_progress public read" on research_progress;
 drop policy if exists "research_progress public insert" on research_progress;
@@ -113,6 +138,16 @@ create policy "progress_attachments public upload" on storage.objects
   for insert with check (bucket_id = 'progress-attachments');
 create policy "progress_attachments public delete" on storage.objects
   for delete using (bucket_id = 'progress-attachments');
+
+drop policy if exists "shared_resources_files public read" on storage.objects;
+drop policy if exists "shared_resources_files public upload" on storage.objects;
+drop policy if exists "shared_resources_files public delete" on storage.objects;
+create policy "shared_resources_files public read" on storage.objects
+  for select using (bucket_id = 'shared-resources');
+create policy "shared_resources_files public upload" on storage.objects
+  for insert with check (bucket_id = 'shared-resources');
+create policy "shared_resources_files public delete" on storage.objects
+  for delete using (bucket_id = 'shared-resources');
 
 drop policy if exists "research_profile public read" on research_profile;
 drop policy if exists "research_profile public insert" on research_profile;
@@ -138,3 +173,12 @@ create policy "research_projects public read" on research_projects for select us
 create policy "research_projects public insert" on research_projects for insert with check (true);
 create policy "research_projects public update" on research_projects for update using (true);
 create policy "research_projects public delete" on research_projects for delete using (true);
+
+drop policy if exists "shared_resources public read" on shared_resources;
+drop policy if exists "shared_resources public insert" on shared_resources;
+drop policy if exists "shared_resources public update" on shared_resources;
+drop policy if exists "shared_resources public delete" on shared_resources;
+create policy "shared_resources public read" on shared_resources for select using (true);
+create policy "shared_resources public insert" on shared_resources for insert with check (true);
+create policy "shared_resources public update" on shared_resources for update using (true);
+create policy "shared_resources public delete" on shared_resources for delete using (true);

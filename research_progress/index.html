@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Research Progress - 南京航空航天大学微波光子学实验室</title>
-  <link rel="stylesheet" href="styles.css?v=20260831-demo1">
+  <link rel="stylesheet" href="styles.css?v=20260901-share1">
 </head>
 <body>
   <header class="topbar">
@@ -14,75 +14,89 @@
     </a>
     <nav>
       <a aria-current="page" href="index.html">进展提交</a>
+      <a href="share.html">文献分享</a>
       <a href="publications.html">学术主页与论文</a>
       <a href="admin.html">负责人后台</a>
     </nav>
   </header>
 
-  <main class="page narrow">
+  <main id="progressLogin" class="page narrow">
+    <section class="panel login">
+      <p class="eyebrow">Group Access</p>
+      <h1>组内科研进展 / Research Progress</h1>
+      <p>请输入组内口令后查看和提交科研进展。文字进展组内可见，附件仅负责人后台可下载。</p>
+      <form id="progressLoginForm" class="inline-form">
+        <input type="password" name="password" placeholder="组内口令 / Group password" required>
+        <button class="primary" type="submit">进入 / Enter</button>
+      </form>
+      <p id="progressLoginMessage" class="muted"></p>
+    </section>
+  </main>
+
+  <main id="progressApp" class="page narrow hidden">
     <section class="hero">
       <p class="eyebrow">Research Progress</p>
       <h1>学生科研进展提交</h1>
-      <p>请提交研究进展、遇到的问题和下一步计划。文字进展组内可见，上传附件仅负责人后台可下载。</p>
+      <p>Submit your research progress, key results, questions and next-step plan. 文字进展组内可见，上传附件仅负责人后台可下载。</p>
     </section>
 
     <form id="progressForm" class="panel form-grid">
-      <label>学生姓名 <input required name="student_name" autocomplete="name"></label>
-      <label>年级/身份
+      <label>学生姓名 / Name <input required name="student_name" autocomplete="name"></label>
+      <label>年级/身份 / Level
         <select required name="student_level">
           <option value="">请选择</option>
           <option>本科生</option><option>硕士生</option><option>博士生</option><option>博士后</option><option>访问学生</option><option>其他</option>
         </select>
       </label>
-      <label>研究方向
+      <label>研究方向 / Research Direction
         <select required name="research_direction" data-research-directions>
           <option value="">请选择</option>
         </select>
       </label>
-      <label>汇报日期 <input required type="date" name="period"></label>
-      <label>课题题目 <input required name="project_title" placeholder="如：微波光子雷达信号处理"></label>
-      <label>导师/指导老师 <input name="advisor" placeholder="选填"></label>
-      <label class="wide">本阶段完成内容
+      <label>汇报日期 / Report Date <input required type="date" name="period"></label>
+      <label>课题题目 / Project Title <input required name="project_title" placeholder="如：微波光子雷达信号处理"></label>
+      <label>导师/指导老师 / Advisor <input name="advisor" placeholder="选填 / Optional"></label>
+      <label class="wide">本阶段完成内容 / Completed Work
         <textarea required name="completed_work" rows="5" placeholder="实验、仿真、理论推导、论文阅读、数据处理等"></textarea>
       </label>
-      <label class="wide">关键结果或证据
+      <label class="wide">关键结果或证据 / Key Results
         <textarea required name="key_results" rows="4" placeholder="请写清楚数据、图表、结论或阶段性发现"></textarea>
       </label>
-      <label class="wide">遇到的问题
+      <label class="wide">遇到的问题 / Questions or Blockers
         <textarea name="blockers" rows="4" placeholder="技术问题、设备问题、论文卡点、需要老师判断的问题"></textarea>
       </label>
-      <label class="wide">下一步计划
+      <label class="wide">下一步计划 / Next Plan
         <textarea required name="next_plan" rows="4" placeholder="下一周/下一阶段准备做什么"></textarea>
       </label>
-      <label>进展状态
+      <label>进展状态 / Status
         <select name="status">
           <option>进行中</option><option>需要讨论</option><option>等待实验条件</option><option>准备投稿</option><option>已完成阶段目标</option>
         </select>
       </label>
-      <label>上传附件
+      <label>上传附件 / Attachment
         <input type="file" name="attachment_file" accept=".ppt,.pptx,.doc,.docx,.pdf,.xls,.xlsx,.zip">
       </label>
-      <label>附件链接 <input name="attachment_url" placeholder="也可粘贴腾讯文档、网盘、论文链接等"></label>
-      <label class="wide">备注
+      <label>附件链接 / Link <input name="attachment_url" placeholder="也可粘贴腾讯文档、网盘、论文链接等"></label>
+      <label class="wide">备注 / Notes
         <textarea name="notes" rows="3"></textarea>
       </label>
       <div class="actions wide">
-        <button class="primary" type="submit">提交进展</button>
+        <button class="primary" type="submit">提交进展 / Submit</button>
         <p id="submitMessage" role="status"></p>
       </div>
     </form>
 
     <section class="panel shared-progress-panel">
       <div class="section-head">
-        <h2>组内进展墙</h2>
+        <h2>组内进展墙 / Group Progress Wall</h2>
         <span id="sharedProgressCount" class="muted"></span>
       </div>
       <div id="sharedProgressList" class="progress-list"></div>
     </section>
   </main>
 
-  <script src="config.js?v=20260831-demo1"></script>
-  <script src="app.js?v=20260831-demo1"></script>
+  <script src="config.js?v=20260901-share1"></script>
+  <script src="app.js?v=20260901-share1"></script>
   <script>ProgressApp.initProgressForm();</script>
 </body>
 </html>

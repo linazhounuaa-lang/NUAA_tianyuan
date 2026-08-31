@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>文献分享 - 南京航空航天大学微波光子学实验室</title>
+  <link rel="stylesheet" href="styles.css?v=20260901-share1">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <strong>南京航空航天大学微波光子学实验室</strong>
+      <span>Microwave Photonics Laboratory, NUAA</span>
+    </a>
+    <nav>
+      <a href="index.html">进展提交</a>
+      <a aria-current="page" href="share.html">文献分享</a>
+      <a href="publications.html">学术主页与论文</a>
+      <a href="admin.html">负责人后台</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section class="hero share-hero">
+      <p class="eyebrow">Literature & Tools</p>
+      <h1>文献分享 / Shared Reading</h1>
+      <p>上传读过的论文、综述、软件、算法或数据处理脚本。此页公开给组内成员浏览和下载。</p>
+    </section>
+
+    <form id="shareForm" class="panel form-grid">
+      <label>分享人 / Name <input required name="contributor" autocomplete="name"></label>
+      <label>类别 / Type
+        <select required name="resource_type">
+          <option>文献 / Paper</option>
+          <option>综述 / Review</option>
+          <option>软件 / Software</option>
+          <option>算法 / Algorithm</option>
+          <option>代码 / Code</option>
+          <option>数据 / Dataset</option>
+        </select>
+      </label>
+      <label>研究方向 / Direction
+        <select required name="research_direction" data-research-directions>
+          <option value="">请选择</option>
+        </select>
+      </label>
+      <label>年份 / Year <input name="year" placeholder="如 2026"></label>
+      <label class="wide">标题 / Title <input required name="title" placeholder="论文题目、软件名或算法名"></label>
+      <label class="wide">推荐理由 / Why Useful
+        <textarea required name="summary" rows="4" placeholder="这篇文章/工具解决什么问题？对组内哪个方向有帮助？"></textarea>
+      </label>
+      <label>上传文件 / File
+        <input type="file" name="resource_file" accept=".pdf,.ppt,.pptx,.doc,.docx,.xls,.xlsx,.zip,.rar,.7z,.m,.py,.ipynb,.txt">
+      </label>
+      <label>外部链接 / Link <input name="resource_url" placeholder="论文链接、GitHub、软件下载页等"></label>
+      <label class="wide">关键词 / Keywords <input name="keywords" placeholder="single-pixel imaging; THz; nonlinear optics"></label>
+      <div class="actions wide">
+        <button class="primary" type="submit">上传分享 / Share</button>
+        <p id="shareMessage" role="status"></p>
+      </div>
+    </form>
+
+    <section class="toolbar panel publication-toolbar">
+      <input id="shareSearch" placeholder="搜索标题、方向、关键词、推荐理由">
+      <select id="shareDirection"><option value="">全部方向</option></select>
+      <select id="shareType"><option value="">全部类型</option></select>
+    </section>
+
+    <section class="paper-list" id="shareList"></section>
+  </main>
+
+  <script src="config.js?v=20260901-share1"></script>
+  <script src="app.js?v=20260901-share1"></script>
+  <script>ProgressApp.initShare();</script>
+</body>
+</html>

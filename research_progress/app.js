@@ -1,13 +1,17 @@
 const ProgressApp = (() => {
   const ADMIN_PASSWORD = "progress2026";
+  const GROUP_PASSWORD = "nuaa2026";
   const config = window.PROGRESS_CONFIG || {};
   const STORAGE_BUCKET = "progress-attachments";
+  const SHARE_BUCKET = "shared-resources";
   const MAX_UPLOAD_SIZE = 50 * 1024 * 1024;
   const KEYS = {
     progress: "lab_progress_items",
     profile: "lab_profile",
     papers: "lab_papers",
     projects: "lab_projects",
+    shares: "lab_shared_resources",
+    progressAccess: "lab_progress_access_ok",
     admin: "lab_progress_admin_ok"
   };
   const DIRECTIONS = [
@@ -21,6 +25,9 @@ const ProgressApp = (() => {
     "阵列天线智能综合、系统级电磁兼容、电磁环境效应",
     "电磁超表面、天线理论与技术",
     "非线性光学、集成光子器件、光纤光学",
+    "太赫兹技术与成像",
+    "二维材料器件",
+    "非线性光学成像",
     "自由空间光载射频",
     "超快微波光子学",
     "其他/交叉方向"
@@ -68,8 +75,8 @@ const ProgressApp = (() => {
     return text ? JSON.parse(text) : null;
   }
 
-  function publicStorageUrl(path) {
-    return `${config.supabaseUrl.replace(/\/$/, "")}/storage/v1/object/public/${STORAGE_BUCKET}/${path}`;
+  function publicStorageUrl(path, bucket = STORAGE_BUCKET) {
+    return `${config.supabaseUrl.replace(/\/$/, "")}/storage/v1/object/public/${bucket}/${path}`;
   }
 
   function cleanFileName(name) {
@@ -95,6 +102,28 @@ const ProgressApp = (() => {
       attachment_size: file.size,
       attachment_type: file.type || "",
       attachment_url: publicStorageUrl(path)
+    };
+  }
+
+  async function uploadSharedResource(file, resourceId) {
+    if (!file || !file.size) return null;
+    if (!cloudEnabled()) throw new Error("文件上传需要先配置 Supabase。");
+    if (file.size > MAX_UPLOAD_SIZE) throw new Error("文件不能超过 50 MB。");
+    const path = `${resourceId}/${Date.now()}-${cleanFileName(file.name)}`;
+    await storageRequest(`object/${SHARE_BUCKET}/${encodeURIComponent(path).replaceAll("%2F", "/")}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": file.type || "application/octet-stream",
+        "x-upsert": "false"
+      },
+      body: file
+    });
+    return {
+      file_name: file.name,
+      file_path: path,
+      file_size: file.size,
+      file_type: file.type || "",
+      file_url: publicStorageUrl(path, SHARE_BUCKET)
     };
   }
 
@@ -128,6 +157,12 @@ const ProgressApp = (() => {
     if (!quiet && [progress, profile, papers, projects].some(result => !result.ok)) {
       showCloudNotice("部分云端数据暂时无法读取，已先显示本机缓存。请确认 Supabase 已执行 schema.sql。");
     }
+  }
+
+  async function loadSharedResources() {
+    if (!cloudEnabled()) return;
+    const shares = await safeCloudRead("shared_resources?select=*&order=created_at.desc", sharedResources());
+    if (shares.ok) write(KEYS.shares, shares.data || []);
   }
 
   function showCloudNotice(message) {
@@ -190,7 +225,12 @@ const ProgressApp = (() => {
   }
 
   function progressItems() {
-    return read(KEYS.progress, defaultProgress());
+    const rows = read(KEYS.progress, []);
+    return rows.length ? rows : defaultProgress();
+  }
+
+  function sharedResources() {
+    return read(KEYS.shares, defaultSharedResources());
   }
 
   function defaultProgress() {
@@ -741,9 +781,23 @@ const ProgressApp = (() => {
   }
 
   async function initProgressForm() {
-    await loadProgressOnly();
-    populateDirections();
-    renderSharedProgress();
+    const unlock = async () => {
+      $("#progressLogin").classList.add("hidden");
+      $("#progressApp").classList.remove("hidden");
+      await loadProgressOnly();
+      populateDirections();
+      renderSharedProgress();
+    };
+    if (sessionStorage.getItem(KEYS.progressAccess) === "1") await unlock();
+    $("#progressLoginForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      if (formData(event.currentTarget).password === GROUP_PASSWORD) {
+        sessionStorage.setItem(KEYS.progressAccess, "1");
+        await unlock();
+      } else {
+        $("#progressLoginMessage").textContent = "口令不正确，请向负责人确认。 / Incorrect password.";
+      }
+    });
     $("#progressForm").addEventListener("submit", async event => {
       event.preventDefault();
       const submitButton = event.currentTarget.querySelector("button[type='submit']");
@@ -780,6 +834,93 @@ const ProgressApp = (() => {
         submitButton.disabled = false;
       }
     });
+  }
+
+  async function initShare() {
+    await loadSharedResources();
+    populateDirections();
+    renderShareFilters();
+    renderSharedResources();
+    $("#shareSearch").addEventListener("input", renderSharedResources);
+    $("#shareDirection").addEventListener("change", renderSharedResources);
+    $("#shareType").addEventListener("change", renderSharedResources);
+    $("#shareForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const submitButton = event.currentTarget.querySelector("button[type='submit']");
+      const file = event.currentTarget.elements.resource_file?.files?.[0] || null;
+      const data = formData(event.currentTarget);
+      delete data.resource_file;
+      const row = {
+        id: uid(),
+        created_at: new Date().toISOString(),
+        ...data
+      };
+      submitButton.disabled = true;
+      $("#shareMessage").textContent = file ? "正在上传并发布分享..." : "正在发布分享...";
+      try {
+        const uploaded = await uploadSharedResource(file, row.id);
+        if (uploaded) Object.assign(row, uploaded);
+        write(KEYS.shares, [row, ...sharedResources()]);
+        if (cloudEnabled()) await cloudInsert("shared_resources", row);
+        event.currentTarget.reset();
+        populateDirections();
+        renderShareFilters();
+        renderSharedResources();
+        $("#shareMessage").textContent = "分享成功，组内成员可以在下方查看和下载。";
+      } catch (error) {
+        console.error(error);
+        if (!file) {
+          write(KEYS.shares, [row, ...sharedResources()]);
+          renderShareFilters();
+          renderSharedResources();
+        }
+        alert(file ? "文件上传失败，请稍后重试，或先填写外部链接。" : "云端保存失败，当前只保存了本机缓存。");
+        $("#shareMessage").textContent = "提交未完全成功，请按提示处理。";
+      } finally {
+        submitButton.disabled = false;
+      }
+    });
+  }
+
+  function renderShareFilters() {
+    const directions = [...new Set(sharedResources().map(item => item.research_direction).filter(Boolean))];
+    const types = [...new Set(sharedResources().map(item => item.resource_type).filter(Boolean))];
+    $("#shareDirection").innerHTML = `<option value="">全部方向</option>${directions.map(item => `<option>${escapeHtml(item)}</option>`).join("")}`;
+    $("#shareType").innerHTML = `<option value="">全部类型</option>${types.map(item => `<option>${escapeHtml(item)}</option>`).join("")}`;
+  }
+
+  function filteredSharedResources() {
+    const q = ($("#shareSearch")?.value || "").trim().toLowerCase();
+    const direction = $("#shareDirection")?.value || "";
+    const type = $("#shareType")?.value || "";
+    return sharedResources().filter(item => {
+      const blob = [item.title, item.contributor, item.research_direction, item.summary, item.keywords, item.resource_type].join(" ").toLowerCase();
+      return (!q || blob.includes(q)) && (!direction || item.research_direction === direction) && (!type || item.resource_type === type);
+    });
+  }
+
+  function renderSharedResources() {
+    const target = $("#shareList");
+    if (!target) return;
+    const rows = filteredSharedResources();
+    target.innerHTML = rows.length ? rows.map(sharedResourceCard).join("") : `<div class="empty-state">暂无分享。可以上传一篇文献、一个软件链接或一个算法代码包。</div>`;
+  }
+
+  function sharedResourceCard(item) {
+    const fileLink = item.file_url ? `<a href="${escapeHtml(item.file_url)}" target="_blank" rel="noopener" download>下载文件 / Download ${item.file_name ? `：${escapeHtml(item.file_name)}` : ""}${item.file_size ? `（${escapeHtml(formatFileSize(item.file_size))}）` : ""}</a>` : "";
+    const externalLink = item.resource_url ? `<a href="${escapeHtml(item.resource_url)}" target="_blank" rel="noopener">外部链接 / External Link</a>` : "";
+    return `<article class="paper-card share-card">
+      <div class="section-head">
+        <div>
+          <h2 class="paper-title">${escapeHtml(item.title || "标题待补充")}</h2>
+          <p class="meta">${escapeHtml(item.resource_type || "资料")}｜${escapeHtml(item.research_direction || "方向待补充")}｜${escapeHtml(item.year || "年份待补充")}</p>
+        </div>
+        <span class="pill">${escapeHtml(item.contributor || "分享人")}</span>
+      </div>
+      <p>${escapeHtml(item.summary || "推荐理由待补充。")}</p>
+      ${item.keywords ? `<p class="meta">关键词 / Keywords：${escapeHtml(item.keywords)}</p>` : ""}
+      <div class="link-row">${fileLink}${externalLink}</div>
+    </article>`;
   }
 
   function sharedProgressItems() {
@@ -1202,6 +1343,22 @@ const ProgressApp = (() => {
           ["Optically controllable nanobreaking of metallic nanowires", `${base}/nanophotonics1.pdf`],
           ["Light-Induced Pulling and Pushing by the Synergic Effect of Optical Force and Photophoretic Force", `${base}/nanophotonics2.pdf`]
         ]
+      },
+      {
+        id: "emerging",
+        title: "太赫兹、二维材料器件与非线性光学成像",
+        subtitle: "THz, 2D materials and nonlinear optical imaging",
+        image: "assets/research/nanophotonics2.png",
+        imageAlt: "光控微纳结构和非线性光学相关实验结果",
+        count: "发展方向",
+        years: "Current",
+        idea: "围绕太赫兹技术、二维材料光电器件和非线性光学成像，拓展微波光子学实验室在新型材料、光场调控和多维成像方面的研究布局。",
+        route: ["二维材料", "太赫兹调控", "非线性响应", "成像器件"],
+        works: [
+          ["Terahertz photonics and imaging / 太赫兹光子学与成像", ""],
+          ["2D-material optoelectronic devices / 二维材料光电器件", ""],
+          ["Nonlinear optical imaging / 非线性光学成像", ""]
+        ]
       }
     ];
   }
@@ -1233,7 +1390,7 @@ const ProgressApp = (() => {
           ${direction.route.map(step => `<span>${escapeHtml(step)}</span>`).join("")}
         </div>
         <div class="research-work-list">
-          ${direction.works.map(([title, href]) => `<a href="${escapeHtml(href)}" target="_blank" rel="noopener">${escapeHtml(title)}</a>`).join("")}
+          ${direction.works.map(([title, href]) => href ? `<a href="${escapeHtml(href)}" target="_blank" rel="noopener">${escapeHtml(title)}</a>` : `<span>${escapeHtml(title)}</span>`).join("")}
         </div>
       </div>
     </article>`;
@@ -1401,5 +1558,38 @@ const ProgressApp = (() => {
     ];
   }
 
-  return { initProgressForm, initAdmin, initPublications };
+  function defaultSharedResources() {
+    return [
+      {
+        id: "demo-share-1",
+        created_at: "2026-09-01T09:00:00.000Z",
+        contributor: "测试本科生-王同学",
+        resource_type: "文献 / Paper",
+        research_direction: "光学计算成像、散射介质成像、光学信息安全",
+        year: "2023",
+        title: "High-resolution self-corrected single-pixel imaging through dynamic and complex scattering media",
+        summary: "适合刚进入单像素成像方向的同学阅读，可以帮助理解动态散射介质下为什么需要自校正，以及实验系统如何搭建。",
+        keywords: "single-pixel imaging; scattering media; self-correction",
+        resource_url: "https://linazhouzhou.github.io/LinaZHOU.github.io/research/media2.pdf",
+        file_url: "",
+        file_name: ""
+      },
+      {
+        id: "demo-share-2",
+        created_at: "2026-09-01T09:05:00.000Z",
+        contributor: "测试硕士生-李同学",
+        resource_type: "算法 / Algorithm",
+        research_direction: "微波光子信号处理技术",
+        year: "2026",
+        title: "频响曲线平滑与误差条绘图脚本",
+        summary: "用于整理微波光子链路频响测试数据，可以统一输出频响曲线、重复实验均值和误差条，适合组会汇报前快速检查数据稳定性。",
+        keywords: "microwave photonics; frequency response; plotting",
+        resource_url: "",
+        file_url: "",
+        file_name: ""
+      }
+    ];
+  }
+
+  return { initProgressForm, initAdmin, initPublications, initShare };
 })();

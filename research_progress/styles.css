@@ -88,6 +88,31 @@ nav a[aria-current="page"], nav a:hover { color: #fff; background: rgba(255,255,
 .hero-visual span:nth-child(1) { left: 44px; top: 42px; }
 .hero-visual span:nth-child(2) { right: 58px; top: 84px; }
 .hero-visual span:nth-child(3) { left: 132px; bottom: 34px; }
+.research-hero-visual {
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 8px;
+  min-height: 250px;
+}
+.research-hero-visual img {
+  width: 100%;
+  height: 100%;
+  min-height: 118px;
+  object-fit: contain;
+  border: 1px solid #d8e3ec;
+  border-radius: 8px;
+  background: #fff;
+  padding: 10px;
+  box-shadow: 0 12px 26px rgba(20,36,50,.08);
+}
+.research-hero-visual img:first-child { grid-row: 1 / -1; }
+.share-hero {
+  min-height: 230px;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.96), rgba(255,255,255,.76)),
+    url("assets/research/ml2.png") right center / contain no-repeat;
+}
 
 .panel {
   background: var(--panel);
@@ -230,7 +255,7 @@ button.danger { border-color: #d88f80; color: #9d2c1c; }
   color: var(--accent);
 }
 .research-work-list { display: grid; gap: 8px; }
-.research-work-list a {
+.research-work-list a, .research-work-list span {
   display: block;
   border-left: 3px solid var(--accent);
   padding: 8px 10px;
@@ -239,6 +264,8 @@ button.danger { border-color: #d88f80; color: #9d2c1c; }
   font-weight: 700;
 }
 .research-work-list a:hover { color: var(--brand); background: #f8fbfd; }
+.share-card .link-row { margin-top: 12px; }
+.share-card .link-row:empty { display: none; }
 
 .progress-list, .paper-list, .paper-editor, .project-list { display: grid; gap: 14px; }
 .progress-card, .paper-card, .paper-edit-card, .project-card {
@@ -281,6 +308,8 @@ button.danger { border-color: #d88f80; color: #9d2c1c; }
 @media (max-width: 860px) {
   .topbar { align-items: flex-start; flex-direction: column; padding: 14px 16px; }
   .form-grid, .stats, .toolbar, .publication-toolbar, .grid-two, .lab-hero, .card-grid, .review-row, .research-card, .research-flow { grid-template-columns: 1fr; }
+  .research-hero-visual { grid-template-columns: 1fr; }
+  .research-hero-visual img:first-child { grid-row: auto; }
   .inline-form { flex-direction: column; align-items: stretch; }
   .research-title-row { flex-direction: column; }
   .research-flow span + span::before { content: ""; }
