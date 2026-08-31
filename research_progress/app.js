@@ -15,19 +15,23 @@ const ProgressApp = (() => {
     admin: "lab_progress_admin_ok"
   };
   const DIRECTIONS = [
-    "光学计算成像、散射介质成像、光学信息安全",
+    "单像素成像与鬼成像 / Single-pixel and Ghost Imaging",
+    "复杂散射介质成像 / Imaging through Complex Scattering Media",
+    "光学计算成像 / Computational Optical Imaging",
+    "光学信息安全与光学加密 / Optical Information Security",
+    "机器学习赋能光学成像 / Machine Learning for Optical Imaging",
+    "太赫兹技术与成像 / Terahertz Technology and Imaging",
+    "二维材料光电器件 / 2D-material Optoelectronic Devices",
+    "非线性光学成像 / Nonlinear Optical Imaging",
+    "微波光子学 / Microwave Photonics",
     "微波光子雷达及关键技术",
     "微波光子信号处理技术",
-    "微波光子学",
     "集成微波光子技术",
     "硅基光子芯片/器件，集成微波光子技术",
     "微波毫米波天线技术",
     "阵列天线智能综合、系统级电磁兼容、电磁环境效应",
     "电磁超表面、天线理论与技术",
     "非线性光学、集成光子器件、光纤光学",
-    "太赫兹技术与成像",
-    "二维材料器件",
-    "非线性光学成像",
     "自由空间光载射频",
     "超快微波光子学",
     "其他/交叉方向"
@@ -250,7 +254,7 @@ const ProgressApp = (() => {
       personal_homepage: "",
       orcid: "",
       email: "linazhou@nuaa.edu.cn",
-      research_keywords: "光学成像；单像素成像；鬼成像；散射介质成像；信息光子学；光学加密；AI for Photonics"
+      research_keywords: "单像素成像；鬼成像；复杂散射介质成像；光学计算成像；光学信息安全；机器学习光学；太赫兹成像；二维材料器件；非线性光学成像；微波光子学"
     });
   }
 
@@ -954,11 +958,11 @@ const ProgressApp = (() => {
   }
 
   async function initAdmin() {
-    await loadCloudData();
     const unlock = () => {
       $("#loginPanel").classList.add("hidden");
       $("#adminApp").classList.remove("hidden");
       renderAdmin();
+      loadCloudData().then(renderAdmin).catch(error => console.error(error));
     };
     if (sessionStorage.getItem(KEYS.admin) === "1") unlock();
     $("#loginForm").addEventListener("submit", event => {
@@ -1272,10 +1276,25 @@ const ProgressApp = (() => {
         imageAlt: "动态浑浊介质中的鬼成像实验系统",
         count: "3 篇代表论文",
         years: "2022-2023",
-        idea: "面向生物组织、雾、浑浊液体等强散射场景，发展自校正单像素成像与鬼成像方法。",
-        route: ["散射扰动", "时域校正", "自校正重建", "高分辨成像"],
+        idea: "面向生物组织、雾、浑浊液体等强散射场景，发展自校正单像素成像与鬼成像方法。Focus on robust optical imaging through dynamic and complex scattering media.",
+        route: ["散射扰动", "单像素采样", "自校正重建", "高分辨成像"],
         works: [
           ["Self-corrected orthonormalized ghost imaging through dynamic and complex scattering media", `${base}/media1.pdf`],
+          ["High-resolution self-corrected single-pixel imaging through dynamic and complex scattering media", `${base}/media2.pdf`],
+          ["High-resolution ghost imaging through complex scattering media via a temporal correction", `${base}/media3.pdf`]
+        ]
+      },
+      {
+        id: "computational",
+        title: "光学计算成像与单像素探测",
+        subtitle: "Computational imaging and single-pixel detection",
+        image: "assets/research/media2.png",
+        imageAlt: "复杂介质成像重建结果",
+        count: "核心方向",
+        years: "Ongoing",
+        idea: "围绕光场编码、单像素探测、计算重建和抗扰动成像，构建低维探测条件下的高质量图像获取方法。This direction links optical encoding with computational reconstruction.",
+        route: ["光场编码", "压缩采样", "计算重建", "智能成像"],
+        works: [
           ["High-resolution self-corrected single-pixel imaging through dynamic and complex scattering media", `${base}/media2.pdf`],
           ["High-resolution ghost imaging through complex scattering media via a temporal correction", `${base}/media3.pdf`]
         ]
@@ -1330,6 +1349,51 @@ const ProgressApp = (() => {
         ]
       },
       {
+        id: "terahertz",
+        title: "太赫兹技术与成像",
+        subtitle: "Terahertz technology and imaging",
+        image: "assets/visuals/photonics-hero-v2.png",
+        imageAlt: "太赫兹波前和光子学抽象科研图",
+        count: "发展方向",
+        years: "Emerging",
+        idea: "面向太赫兹波段的信息获取、成像与器件调控，探索微波光子学、材料响应和计算成像的交叉方法。Terahertz imaging is positioned as an emerging bridge between photonics, materials and sensing.",
+        route: ["太赫兹源", "材料响应", "成像探测", "智能分析"],
+        works: [
+          ["Terahertz photonics and imaging / 太赫兹光子学与成像", ""],
+          ["THz sensing with photonic and material platforms / 光子-材料平台太赫兹传感", ""]
+        ]
+      },
+      {
+        id: "2d-materials",
+        title: "二维材料光电器件",
+        subtitle: "2D-material optoelectronic devices",
+        image: "assets/visuals/photonics-hero-v2.png",
+        imageAlt: "二维材料晶格和光场耦合抽象图",
+        count: "发展方向",
+        years: "Emerging",
+        idea: "关注二维材料中的光电响应、非线性效应和器件集成，将材料物性与微波光子、太赫兹和成像系统连接起来。This direction emphasizes material-device-system co-design.",
+        route: ["二维材料", "光电响应", "器件集成", "系统应用"],
+        works: [
+          ["2D-material photodetectors and modulators / 二维材料探测与调制器件", ""],
+          ["Material-enabled photonic devices / 材料赋能光子器件", ""]
+        ]
+      },
+      {
+        id: "nonlinear-imaging",
+        title: "非线性光学成像",
+        subtitle: "Nonlinear optical imaging",
+        image: "assets/research/nanophotonics2.png",
+        imageAlt: "光场作用下的非线性响应示意图",
+        count: "发展方向",
+        years: "Emerging",
+        idea: "探索非线性光学效应在高对比度成像、材料表征和复杂环境探测中的作用，形成从光场调控到图像重建的研究链条。",
+        route: ["非线性响应", "光场调控", "信号增强", "多维成像"],
+        works: [
+          ["Nonlinear optical imaging / 非线性光学成像", ""],
+          ["Nonlinear photonic sensing and characterization / 非线性光子传感与表征", ""]
+        ]
+      },
+      {
         id: "nanophotonics",
         title: "纳米光子学与光控纳米结构",
         subtitle: "Nanophotonics",
@@ -1342,22 +1406,6 @@ const ProgressApp = (() => {
         works: [
           ["Optically controllable nanobreaking of metallic nanowires", `${base}/nanophotonics1.pdf`],
           ["Light-Induced Pulling and Pushing by the Synergic Effect of Optical Force and Photophoretic Force", `${base}/nanophotonics2.pdf`]
-        ]
-      },
-      {
-        id: "emerging",
-        title: "太赫兹、二维材料器件与非线性光学成像",
-        subtitle: "THz, 2D materials and nonlinear optical imaging",
-        image: "assets/research/nanophotonics2.png",
-        imageAlt: "光控微纳结构和非线性光学相关实验结果",
-        count: "发展方向",
-        years: "Current",
-        idea: "围绕太赫兹技术、二维材料光电器件和非线性光学成像，拓展微波光子学实验室在新型材料、光场调控和多维成像方面的研究布局。",
-        route: ["二维材料", "太赫兹调控", "非线性响应", "成像器件"],
-        works: [
-          ["Terahertz photonics and imaging / 太赫兹光子学与成像", ""],
-          ["2D-material optoelectronic devices / 二维材料光电器件", ""],
-          ["Nonlinear optical imaging / 非线性光学成像", ""]
         ]
       }
     ];
@@ -1520,7 +1568,7 @@ const ProgressApp = (() => {
       {
         student_name: "测试本科生-王同学",
         student_level: "本科生",
-        research_direction: "光学计算成像、散射介质成像、光学信息安全",
+        research_direction: "单像素成像与鬼成像 / Single-pixel and Ghost Imaging",
         period: "2026-08-31",
         report_date: "2026-08-31",
         project_title: "散射介质中单像素成像文献复现",

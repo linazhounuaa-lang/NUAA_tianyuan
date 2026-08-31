@@ -58,6 +58,39 @@ nav a[aria-current="page"], nav a:hover { color: #fff; background: rgba(255,255,
   min-height: 300px;
   padding: 34px 0 24px;
 }
+.academic-hero {
+  position: relative;
+  display: block;
+  min-height: 420px;
+  margin: 0 calc(50% - 50vw) 24px;
+  padding: 72px max(32px, calc((100vw - 1180px) / 2 + 16px)) 56px;
+  overflow: hidden;
+  color: #fff;
+  background:
+    linear-gradient(90deg, rgba(4,17,36,.94) 0%, rgba(5,30,55,.86) 34%, rgba(5,30,55,.34) 74%, rgba(4,17,36,.12) 100%),
+    url("assets/visuals/photonics-hero-v2.png") center / cover no-repeat;
+}
+.academic-hero::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(214,162,90,.9), transparent);
+}
+.academic-hero > div {
+  position: relative;
+  z-index: 1;
+  max-width: 780px;
+}
+.academic-hero h1 { max-width: 780px; color: #fff; }
+.academic-hero p { color: rgba(255,255,255,.84); }
+.academic-hero .eyebrow { color: #f0bd71 !important; }
+.academic-hero .link-row a {
+  border-color: rgba(255,255,255,.28);
+  color: #fff;
+  background: rgba(255,255,255,.1);
+  backdrop-filter: blur(8px);
+}
 .hero-visual {
   position: relative;
   min-height: 210px;
