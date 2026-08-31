@@ -137,7 +137,7 @@ button.danger { border-color: #d88f80; color: #9d2c1c; }
   font-weight: 700;
 }
 
-.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 18px; }
+.stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; margin-bottom: 18px; }
 .stat, .summary-item {
   padding: 18px;
   background: #fff;
@@ -158,14 +158,14 @@ button.danger { border-color: #d88f80; color: #9d2c1c; }
 .section-head h2 { margin: 0; font-size: 22px; }
 .grid-two { display: grid; grid-template-columns: minmax(0, .88fr) minmax(420px, 1.12fr); gap: 18px; margin-top: 18px; }
 
-.progress-list, .paper-list, .paper-editor { display: grid; gap: 14px; }
-.progress-card, .paper-card, .paper-edit-card {
+.progress-list, .paper-list, .paper-editor, .project-list { display: grid; gap: 14px; }
+.progress-card, .paper-card, .paper-edit-card, .project-card {
   background: #fff;
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 18px;
 }
-.progress-card h3, .paper-card h2 { margin: 0 0 8px; }
+.progress-card h3, .paper-card h2, .project-card h3 { margin: 0 0 8px; }
 .meta { color: var(--muted); }
 .pill {
   display: inline-flex;

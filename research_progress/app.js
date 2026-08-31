@@ -5,6 +5,7 @@ const ProgressApp = (() => {
     progress: "lab_progress_items",
     profile: "lab_profile",
     papers: "lab_papers",
+    projects: "lab_projects",
     admin: "lab_progress_admin_ok"
   };
   const DIRECTIONS = [
@@ -52,14 +53,16 @@ const ProgressApp = (() => {
   async function loadCloudData() {
     if (!cloudEnabled()) return;
     try {
-      const [progress, profile, papers] = await Promise.all([
+      const [progress, profile, papers, projects] = await Promise.all([
         cloudRequest("research_progress?select=*&order=created_at.desc"),
         cloudRequest("research_profile?select=*&id=eq.1"),
-        cloudRequest("research_papers?select=*&order=year.desc,created_at.desc")
+        cloudRequest("research_papers?select=*&order=year.desc,created_at.desc"),
+        cloudRequest("research_projects?select=*&order=created_at.desc")
       ]);
       write(KEYS.progress, progress || []);
       if (profile?.[0]) write(KEYS.profile, profile[0]);
       write(KEYS.papers, papers || []);
+      write(KEYS.projects, projects || []);
     } catch (error) {
       console.error(error);
       alert("云端数据读取失败，当前将使用本机缓存数据。");
@@ -119,19 +122,44 @@ const ProgressApp = (() => {
 
   function profileData() {
     return read(KEYS.profile, {
-      name: "杨琬琛",
-      title: "南京航空航天大学微波光子学实验室",
-      bio: "主要展示 Google Scholar、个人主页、ORCID 和代表性论文。可在负责人后台修改。",
-      google_scholar: "",
+      name: "周莉娜",
+      title: "南京航空航天大学微波光子学实验室 副教授",
+      bio: "周莉娜博士主要从事光子学与光学成像研究，研究方向包括单像素成像、鬼成像、散射介质成像、信息光子学、光学加密与认证，以及人工智能赋能的光子学系统。现任南京航空航天大学副教授，承担本科生《数字逻辑电路》和博士生《非线性光学》等课程。",
+      google_scholar: "https://scholar.google.com/citations?user=HYJKgg4AAAAJ&hl=en&oi=ao",
       personal_homepage: "",
       orcid: "",
-      email: "",
-      research_keywords: "微波光子学；微波毫米波天线；光电信息；智能感知"
+      email: "linazhou@polyu.edu.hk",
+      research_keywords: "光学成像；单像素成像；鬼成像；散射介质成像；信息光子学；光学加密；AI for Photonics"
     });
   }
 
   function papers() {
-    return read(KEYS.papers, []);
+    const rows = read(KEYS.papers, []);
+    return rows.length ? rows : defaultPapers();
+  }
+
+  function projects() {
+    const rows = read(KEYS.projects, []);
+    return rows.length ? rows : defaultProjects();
+  }
+
+  function defaultProjects() {
+    return [
+      { id: "default-project-youth-nsfc", role: "项目负责人", title: "国家自然科学基金青年科学基金项目", period: "2026-2028", funding: "国家自然科学基金委员会", status: "已获批", description: "2026年获批国家自然科学基金青年科学基金项目，围绕光学成像、信息光子学及相关交叉方向开展研究。" },
+      { id: "default-project-spi", role: "项目负责人", title: "复杂动态环境下单像素光谱成像技术及应用", period: "2025-11 至 2028-12", funding: "获批经费 100 万元", status: "在研", description: "面向复杂动态环境中的光学成像与信息获取需求，发展单像素光谱成像方法和应用。" },
+      { id: "default-project-talent", role: "项目负责人", title: "周莉娜国家级人才科研启动基金", period: "2026-01 至 2028-12", funding: "获批经费 200 万元", status: "在研", description: "支持信息光子学、光学成像和人工智能光子学方向的独立研究。" }
+    ];
+  }
+
+  function defaultPapers() {
+    return [
+      { id: "default-paper-1", title: "High-resolution self-corrected single-pixel imaging through dynamic and complex scattering media", authors: "Lina Zhou, Yin Xiao, Wen Chen", journal: "Optics Express", year: "2023", type: "期刊论文", doi: "", link: "", keywords: "single-pixel imaging; scattering media" },
+      { id: "default-paper-2", title: "Edge detection in gradient ghost imaging through complex media", authors: "Lina Zhou, Yin Xiao, Wen Chen", journal: "Applied Physics Letters, 123(11), 111104", year: "2023", type: "期刊论文", doi: "", link: "", keywords: "ghost imaging; edge detection" },
+      { id: "default-paper-3", title: "Visual cryptography using binary amplitude-only holograms [Invited]", authors: "Lina Zhou, Yin Xiao, Zilan Pan, Yonggui Cao, Wen Chen", journal: "Frontiers in Photonics, 2, 821304", year: "2022", type: "期刊论文", doi: "", link: "", keywords: "visual cryptography; holography" },
+      { id: "default-paper-4", title: "High-efficiency and high-fidelity optical signal transmission in free space through scattering media using 2D random amplitude-only patterns and look-up table", authors: "Yin Xiao, Lina Zhou, Wen Chen", journal: "Optics and Lasers in Engineering, 155, 107059", year: "2022", type: "期刊论文", doi: "", link: "", keywords: "optical signal transmission; scattering media" },
+      { id: "default-paper-5", title: "Learning-based optical authentication in complex scattering media", authors: "Lina Zhou, Yin Xiao, Wen Chen", journal: "Optics and Lasers in Engineering, 141, 106570", year: "2021", type: "期刊论文", doi: "", link: "", keywords: "optical authentication; machine learning" },
+      { id: "default-paper-6", title: "Learning complex scattering media for optical encryption", authors: "Lina Zhou, Yin Xiao, Wen Chen", journal: "Optics Letters, 45(18), 5279-5282", year: "2020", type: "期刊论文", doi: "", link: "", keywords: "optical encryption; scattering media" }
+    ];
   }
 
   function populateDirections(root = document) {
@@ -190,6 +218,7 @@ const ProgressApp = (() => {
     renderFilters();
     renderProgress();
     renderProfileForm();
+    renderProjectEditor();
     renderPaperEditor();
     $("#searchInput").oninput = renderProgress;
     $("#directionFilter").onchange = renderProgress;
@@ -198,6 +227,7 @@ const ProgressApp = (() => {
     $("#exportCsv").onclick = exportProgressCsv;
     $("#seedData").onclick = seedData;
     $("#saveProfile").onclick = saveProfile;
+    $("#addProject").onclick = () => addProject();
     $("#addPaper").onclick = () => addPaper();
   }
 
@@ -207,7 +237,8 @@ const ProgressApp = (() => {
       ["提交总数", rows.length],
       ["未读", rows.filter(item => item.review_status === "未读").length],
       ["需面谈", rows.filter(item => item.review_status === "需面谈").length],
-      ["论文条目", papers().length]
+      ["论文条目", papers().length],
+      ["科研项目", projects().length]
     ];
     $("#stats").innerHTML = stats.map(([label, value]) => `<div class="stat"><strong>${value}</strong><span>${label}</span></div>`).join("");
   }
@@ -315,6 +346,64 @@ const ProgressApp = (() => {
     $$("[data-paper-delete]").forEach(button => button.addEventListener("click", deletePaper));
   }
 
+  function renderProjectEditor() {
+    $("#projectEditor").innerHTML = projects().map(projectEditCard).join("") || `<div class="empty-state">暂无项目。点击“新增项目”开始添加。</div>`;
+    $$("[data-project-field]").forEach(element => element.addEventListener("change", updateProjectField));
+    $$("[data-project-delete]").forEach(button => button.addEventListener("click", deleteProject));
+  }
+
+  function projectEditCard(project) {
+    const fields = [
+      ["title", "项目名称"], ["role", "角色"], ["period", "周期"],
+      ["funding", "经费/来源"], ["status", "状态"], ["description", "说明"]
+    ];
+    return `<article class="paper-edit-card">
+      <div class="form-grid">
+        ${fields.map(([name, label]) => `<label>${label}<input data-id="${project.id}" data-project-field="${name}" value="${escapeHtml(project[name] || "")}"></label>`).join("")}
+      </div>
+      <div class="actions"><button class="danger" type="button" data-project-delete="${project.id}">删除项目</button></div>
+    </article>`;
+  }
+
+  async function addProject() {
+    const row = { id: uid(), created_at: new Date().toISOString(), role: "项目负责人", title: "新项目名称", period: "", funding: "", status: "在研", description: "" };
+    write(KEYS.projects, [row, ...projects().filter(project => !String(project.id).startsWith("default-"))]);
+    try { await cloudInsert("research_projects", row); }
+    catch (error) { console.error(error); alert("云端新增失败，当前只添加了本机缓存。"); }
+    renderProjectEditor();
+    renderStats();
+  }
+
+  async function updateProjectField(event) {
+    const { id, projectField } = event.currentTarget.dataset;
+    const value = event.currentTarget.value;
+    const source = projects();
+    const oldItem = source.find(project => project.id === id);
+    const newId = String(id).startsWith("default-") ? uid() : id;
+    const updatedItem = { ...oldItem, id: newId, [projectField]: value };
+    write(KEYS.projects, source.map(project => project.id === id ? updatedItem : project));
+    try {
+      if (String(id).startsWith("default-")) await cloudInsert("research_projects", updatedItem);
+      else await cloudPatch("research_projects", id, { [projectField]: value });
+    } catch (error) {
+      console.error(error);
+      alert("云端更新失败，当前只更新了本机缓存。");
+    }
+    renderProjectEditor();
+  }
+
+  async function deleteProject(event) {
+    const id = event.currentTarget.dataset.projectDelete;
+    if (!confirm("确定删除这个项目吗？")) return;
+    write(KEYS.projects, projects().filter(project => project.id !== id));
+    if (!String(id).startsWith("default-")) {
+      try { await cloudDelete("research_projects", id); }
+      catch (error) { console.error(error); alert("云端删除失败，当前只删除了本机缓存。"); }
+    }
+    renderProjectEditor();
+    renderStats();
+  }
+
   function paperEditCard(paper) {
     const fields = [
       ["title", "题目"], ["authors", "作者"], ["journal", "期刊/会议"], ["year", "年份"],
@@ -340,9 +429,19 @@ const ProgressApp = (() => {
   async function updatePaperField(event) {
     const { id, paperField } = event.currentTarget.dataset;
     const value = event.currentTarget.value;
-    write(KEYS.papers, papers().map(paper => paper.id === id ? { ...paper, [paperField]: value } : paper));
-    try { await cloudPatch("research_papers", id, { [paperField]: value }); }
-    catch (error) { console.error(error); alert("云端更新失败，当前只更新了本机缓存。"); }
+    const source = papers();
+    const oldItem = source.find(paper => paper.id === id);
+    const newId = String(id).startsWith("default-") ? uid() : id;
+    const updatedItem = { ...oldItem, id: newId, [paperField]: value };
+    write(KEYS.papers, source.map(paper => paper.id === id ? updatedItem : paper));
+    try {
+      if (String(id).startsWith("default-")) await cloudInsert("research_papers", updatedItem);
+      else await cloudPatch("research_papers", id, { [paperField]: value });
+    } catch (error) {
+      console.error(error);
+      alert("云端更新失败，当前只更新了本机缓存。");
+    }
+    renderPaperEditor();
   }
 
   async function deletePaper(event) {
@@ -358,6 +457,7 @@ const ProgressApp = (() => {
   async function initPublications() {
     await loadCloudData();
     renderPublicProfile();
+    renderProjects();
     renderPaperFilters();
     renderPapers();
     $("#paperSearch").addEventListener("input", renderPapers);
@@ -396,6 +496,23 @@ const ProgressApp = (() => {
   function renderPapers() {
     const rows = filteredPapers();
     $("#paperList").innerHTML = rows.length ? rows.map(paperCard).join("") : `<div class="empty-state">暂无论文条目。负责人可在后台添加 Google Scholar 链接和代表性论文。</div>`;
+  }
+
+  function renderProjects() {
+    $("#projectList").innerHTML = projects().length ? projects().map(projectCard).join("") : `<div class="empty-state">暂无项目条目。</div>`;
+  }
+
+  function projectCard(project) {
+    return `<article class="project-card">
+      <div class="section-head">
+        <div>
+          <h3>${escapeHtml(project.title || "项目名称待补充")}</h3>
+          <p class="meta">${escapeHtml(project.role || "角色待补充")}｜${escapeHtml(project.period || "周期待补充")}｜${escapeHtml(project.status || "状态待补充")}</p>
+        </div>
+        <span class="pill ok">${escapeHtml(project.funding || "项目")}</span>
+      </div>
+      <p>${escapeHtml(project.description || "项目说明待补充。")}</p>
+    </article>`;
   }
 
   function paperCard(paper) {
