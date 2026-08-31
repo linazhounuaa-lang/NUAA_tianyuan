@@ -761,11 +761,12 @@ const ProgressApp = (() => {
 
   function progressCard(item) {
     const warn = item.review_status === "未读" || item.review_status === "需面谈";
+    const dateText = progressReportDate(item);
     return `<article class="progress-card">
       <div class="section-head">
         <div>
           <h3>${escapeHtml(item.student_name)}｜${escapeHtml(item.project_title)}</h3>
-          <p class="meta">${escapeHtml(item.student_level)}｜${escapeHtml(item.research_direction)}｜汇报日期：${escapeHtml(item.period)}｜提交时间：${formatDate(item.created_at)}</p>
+          <p class="meta">${escapeHtml(item.student_level)}｜${escapeHtml(item.research_direction)}｜汇报日期：${escapeHtml(dateText)}｜提交时间：${formatDate(item.created_at)}</p>
         </div>
         <span class="pill ${warn ? "warn" : "ok"}">${escapeHtml(item.review_status || "未读")}</span>
       </div>
@@ -788,6 +789,10 @@ const ProgressApp = (() => {
 
   function noteBlock(title, value) {
     return `<div class="note-block"><h4>${title}</h4><div>${escapeHtml(value)}</div></div>`;
+  }
+
+  function progressReportDate(item) {
+    return item.report_date || item.period || "";
   }
 
   async function updateProgressField(event) {
@@ -1020,12 +1025,12 @@ const ProgressApp = (() => {
   }
 
   function progressSummary(rows) {
-    return rows.map((item, index) => `${index + 1}. ${item.student_name}｜汇报日期：${item.period}｜${item.project_title}\n完成：${item.completed_work}\n问题：${item.blockers || "无"}\n下一步：${item.next_plan}\n`).join("\n") || "暂无进展记录。";
+    return rows.map((item, index) => `${index + 1}. ${item.student_name}｜汇报日期：${progressReportDate(item)}｜${item.project_title}\n完成：${item.completed_work}\n问题：${item.blockers || "无"}\n下一步：${item.next_plan}\n`).join("\n") || "暂无进展记录。";
   }
 
   function exportProgressCsv() {
     const headers = ["created_at","student_name","student_level","research_direction","report_date","project_title","advisor","completed_work","key_results","blockers","next_plan","status","review_status","feedback","attachment_url","notes"];
-    const exportRows = progressItems().map(row => ({ ...row, report_date: row.period }));
+    const exportRows = progressItems().map(row => ({ ...row, report_date: progressReportDate(row) }));
     const lines = [headers.join(",")].concat(exportRows.map(row => headers.map(h => `"${String(row[h] || "").replaceAll('"', '""')}"`).join(",")));
     const blob = new Blob(["\ufeff" + lines.join("\n")], { type: "text/csv;charset=utf-8" });
     const link = document.createElement("a");
