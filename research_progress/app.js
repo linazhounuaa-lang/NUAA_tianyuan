@@ -1349,42 +1349,6 @@ const ProgressApp = (() => {
         ]
       },
       {
-        id: "terahertz",
-        title: "太赫兹技术与成像",
-        subtitle: "Terahertz technology and imaging",
-        image: "assets/visuals/photonics-hero-v2.png",
-        imageAlt: "太赫兹波前和光子学抽象科研图",
-        count: "发展方向",
-        years: "Emerging",
-        idea: "面向太赫兹波段的信息获取、成像与器件调控，探索微波光子学、材料响应和计算成像的交叉方法。Terahertz imaging is positioned as an emerging bridge between photonics, materials and sensing.",
-        route: ["太赫兹源", "材料响应", "成像探测", "智能分析"],
-        works: []
-      },
-      {
-        id: "2d-materials",
-        title: "二维材料光电器件",
-        subtitle: "2D-material optoelectronic devices",
-        image: "assets/visuals/photonics-hero-v2.png",
-        imageAlt: "二维材料晶格和光场耦合抽象图",
-        count: "发展方向",
-        years: "Emerging",
-        idea: "关注二维材料中的光电响应、非线性效应和器件集成，将材料物性与微波光子、太赫兹和成像系统连接起来。This direction emphasizes material-device-system co-design.",
-        route: ["二维材料", "光电响应", "器件集成", "系统应用"],
-        works: []
-      },
-      {
-        id: "nonlinear-imaging",
-        title: "非线性光学成像",
-        subtitle: "Nonlinear optical imaging",
-        image: "assets/research/nanophotonics2.png",
-        imageAlt: "光场作用下的非线性响应示意图",
-        count: "发展方向",
-        years: "Emerging",
-        idea: "探索非线性光学效应在高对比度成像、材料表征和复杂环境探测中的作用，形成从光场调控到图像重建的研究链条。",
-        route: ["非线性响应", "光场调控", "信号增强", "多维成像"],
-        works: []
-      },
-      {
         id: "nanophotonics",
         title: "纳米光子学与光控纳米结构",
         subtitle: "Nanophotonics",
