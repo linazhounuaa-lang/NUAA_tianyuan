@@ -190,7 +190,15 @@ const ProgressApp = (() => {
   }
 
   function progressItems() {
-    return read(KEYS.progress, []);
+    return read(KEYS.progress, defaultProgress());
+  }
+
+  function defaultProgress() {
+    return demoProgressRows().map((item, index) => ({
+      ...item,
+      id: `demo-progress-${index + 1}`,
+      created_at: "2026-08-31T09:00:00.000Z"
+    }));
   }
 
   function profileData() {
@@ -934,6 +942,10 @@ const ProgressApp = (() => {
     const { id, progressField } = event.currentTarget.dataset;
     const value = event.currentTarget.value;
     write(KEYS.progress, progressItems().map(item => item.id === id ? { ...item, [progressField]: value } : item));
+    if (String(id).startsWith("demo-progress-")) {
+      renderProgress();
+      return;
+    }
     try { await cloudPatch("research_progress", id, { [progressField]: value }); }
     catch (error) { console.error(error); alert("云端更新失败，当前只更新了本机缓存。"); }
     renderProgress();
@@ -944,6 +956,10 @@ const ProgressApp = (() => {
     if (!confirm("确定删除这条进展记录吗？")) return;
     const current = progressItems().find(item => item.id === id);
     write(KEYS.progress, progressItems().filter(item => item.id !== id));
+    if (String(id).startsWith("demo-progress-")) {
+      renderProgress();
+      return;
+    }
     try {
       await cloudDelete("research_progress", id);
       await deleteAttachment(current?.attachment_path);
@@ -1313,28 +1329,7 @@ const ProgressApp = (() => {
   }
 
   async function seedData() {
-    const sampleProgress = [
-      {
-        id: uid(),
-        created_at: new Date().toISOString(),
-        student_name: "测试学生A",
-        student_level: "硕士生",
-        research_direction: "微波光子信号处理技术",
-        period: "2026-08-31",
-        report_date: "2026-08-31",
-        project_title: "微波光子链路线性化实验",
-        advisor: "杨老师",
-        completed_work: "完成链路搭建和初步频响测试，整理了三组实验数据。",
-        key_results: "初步观察到增益平坦度改善，仍需补充误差分析。",
-        blockers: "高频段噪声偏大，需要确认仪器校准。",
-        next_plan: "完成校准对比实验，并绘制论文可用图。",
-        status: "需要讨论",
-        attachment_url: "",
-        notes: "",
-        review_status: "未读",
-        feedback: ""
-      }
-    ];
+    const sampleProgress = demoProgressRows().map(item => ({ ...item, id: uid(), created_at: new Date().toISOString() }));
     const samplePapers = [
       {
         id: uid(),
@@ -1361,6 +1356,49 @@ const ProgressApp = (() => {
       }
     }
     renderAdmin();
+  }
+
+  function demoProgressRows() {
+    return [
+      {
+        student_name: "测试本科生-王同学",
+        student_level: "本科生",
+        research_direction: "光学计算成像、散射介质成像、光学信息安全",
+        period: "2026-08-31",
+        report_date: "2026-08-31",
+        project_title: "散射介质中单像素成像文献复现",
+        advisor: "周老师",
+        completed_work: "完成三篇单像素成像和鬼成像相关论文阅读，整理了光源、SLM、探测器和重建算法流程，并尝试复现基础随机采样重建。",
+        key_results: "已得到低分辨率重建图像；采样率从 10% 提高到 30% 后，图像轮廓明显改善。",
+        blockers: "对动态散射介质的时间校正方法理解还不够，需要进一步确认公式推导。",
+        next_plan: "继续复现 self-corrected single-pixel imaging 的核心流程，补充不同采样率和噪声水平下的对比图。",
+        status: "进行中",
+        attachment_url: "",
+        attachment_name: "",
+        notes: "测试演示数据，可在后台删除。",
+        review_status: "未读",
+        feedback: ""
+      },
+      {
+        student_name: "测试硕士生-李同学",
+        student_level: "硕士生",
+        research_direction: "微波光子信号处理技术",
+        period: "2026-08-31",
+        report_date: "2026-08-31",
+        project_title: "微波光子链路线性化与频响测试",
+        advisor: "周老师",
+        completed_work: "搭建初步微波光子链路，完成调制器偏置点扫描和 2-18 GHz 频响测试，整理了三组重复实验数据。",
+        key_results: "链路在 6-14 GHz 区间响应较平坦，最大起伏约 2.8 dB；调整偏置点后低频段噪声有所下降。",
+        blockers: "高频段测试重复性一般，怀疑与连接器损耗和仪器校准有关。",
+        next_plan: "重新校准矢网和射频线缆，补充不同光功率下的频响曲线，并准备下次组会 PPT。",
+        status: "需要讨论",
+        attachment_url: "",
+        attachment_name: "",
+        notes: "测试演示数据，可在后台删除。",
+        review_status: "未读",
+        feedback: ""
+      }
+    ];
   }
 
   return { initProgressForm, initAdmin, initPublications };
