@@ -153,12 +153,501 @@ const ProgressApp = (() => {
 
   function defaultPapers() {
     return [
-      { id: "default-paper-1", title: "High-resolution self-corrected single-pixel imaging through dynamic and complex scattering media", authors: "Lina Zhou, Yin Xiao, Wen Chen", journal: "Optics Express", year: "2023", type: "期刊论文", doi: "", link: "", keywords: "single-pixel imaging; scattering media" },
-      { id: "default-paper-2", title: "Edge detection in gradient ghost imaging through complex media", authors: "Lina Zhou, Yin Xiao, Wen Chen", journal: "Applied Physics Letters, 123(11), 111104", year: "2023", type: "期刊论文", doi: "", link: "", keywords: "ghost imaging; edge detection" },
-      { id: "default-paper-3", title: "Visual cryptography using binary amplitude-only holograms [Invited]", authors: "Lina Zhou, Yin Xiao, Zilan Pan, Yonggui Cao, Wen Chen", journal: "Frontiers in Photonics, 2, 821304", year: "2022", type: "期刊论文", doi: "", link: "", keywords: "visual cryptography; holography" },
-      { id: "default-paper-4", title: "High-efficiency and high-fidelity optical signal transmission in free space through scattering media using 2D random amplitude-only patterns and look-up table", authors: "Yin Xiao, Lina Zhou, Wen Chen", journal: "Optics and Lasers in Engineering, 155, 107059", year: "2022", type: "期刊论文", doi: "", link: "", keywords: "optical signal transmission; scattering media" },
-      { id: "default-paper-5", title: "Learning-based optical authentication in complex scattering media", authors: "Lina Zhou, Yin Xiao, Wen Chen", journal: "Optics and Lasers in Engineering, 141, 106570", year: "2021", type: "期刊论文", doi: "", link: "", keywords: "optical authentication; machine learning" },
-      { id: "default-paper-6", title: "Learning complex scattering media for optical encryption", authors: "Lina Zhou, Yin Xiao, Wen Chen", journal: "Optics Letters, 45(18), 5279-5282", year: "2020", type: "期刊论文", doi: "", link: "", keywords: "optical encryption; scattering media" }
+          {
+                "id": "default-paper-1",
+                "title": "High-resolution self-corrected single-pixel imaging through dynamic and complex scattering media",
+                "authors": "Lina Zhou, Yin Xiao, and Wen Chen",
+                "journal": "Optics Express, 31(14), 2023",
+                "year": "2023",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-2",
+                "title": "Edge detection in gradient ghost imaging through complex media",
+                "authors": "Lina Zhou, Yin Xiao, and Wen Chen",
+                "journal": "Applied Physics Letters, 123(11), 111104 (5pp), 2023",
+                "year": "2023",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-3",
+                "title": "Self-corrected orthonormalized ghost imaging through dynamic and complex scattering media",
+                "authors": "Lina Zhou, Yin Xiao, and Wen Chen",
+                "journal": "Applied Physics Letters, 123(1), 011107 (5pp), 2023",
+                "year": "2023",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-4",
+                "title": "Gradual ghost imaging of moving objects through dynamic and complex scattering media",
+                "authors": "Lina Zhou, Yin Xiao, and Wen Chen",
+                "journal": "Optics Letters, In preparation, 2023",
+                "year": "2023",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-5",
+                "title": "Optical data transmission through highly dynamic and turbid water using dynamic scaling factors and single-pixel detector",
+                "authors": "Zilan Pan, Yin Xiao, Yonggui Cao, Lina Zhou, and Wen Chen",
+                "journal": "Optics Express, Accepted and in Press, 2022",
+                "year": "2022",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-6",
+                "title": "Physically-secured ghost diffraction and transmission",
+                "authors": "Yonggui Cao, Yin Xiao, Zilan Pan, Lina Zhou, and Wen Chen",
+                "journal": "IEEE Photonics Technology Letters, 34 (22), 1238-1241, 2022",
+                "year": "2022",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-7",
+                "title": "High-fidelity temporally-corrected transmission through dynamic smoke via pixel-to-plane data encoding",
+                "authors": "Yonggui Cao, Yin Xiao, Zilan Pan, Lina Zhou, and Wen Chen",
+                "journal": "Optics Express, 30 (20), 36464-36477, 2022",
+                "year": "2022",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-8",
+                "title": "High-resolution ghost imaging through complex scattering media via a temporal correction",
+                "authors": "Yin Xiao, Lina Zhou, and Wen Chen",
+                "journal": "Optics Letters, 47 (15), 3692-3695, 2022",
+                "year": "2022",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-9",
+                "title": "Accurate optical information transmission through thick tissues using zero-frequency modulation and single-pixel detection",
+                "authors": "Zilan Pan, Yin Xiao, Yonggui Cao, Lina Zhou, and Wen Chen",
+                "journal": "Optics and Lasers in Engineering, 158, 107133 (7pp), 2022",
+                "year": "2022",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-10",
+                "title": "Direct generation of 2D arrays of random numbers for high- fidelity optical ghost diffraction and information transmission through scattering media",
+                "authors": "Yonggui Cao, Yin Xiao, Zilan Pan, Lina Zhou, and Wen Chen",
+                "journal": "Optics and Lasers in Engineering, 158, 107141 (8pp), 2022",
+                "year": "2022",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-11",
+                "title": "High-efficiency and high- fidelity optical signal transmission in free space through scattering media using 2D random amplitude-only patterns and look- up table",
+                "authors": "Yin Xiao, Lina Zhou, and Wen Chen",
+                "journal": "Optics and Lasers in Engineering, 155, 107059 (5pp), 2022",
+                "year": "2022",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-12",
+                "title": "Physically-secured high- fidelity free-space optical data transmission through scattering media using dynamic scaling factors",
+                "authors": "Yin Xiao, Lina Zhou, Zilan Pan, Yonggui Cao, and Wen Chen",
+                "journal": "Optics Express, 30 (5), 8186- 8198, 2022",
+                "year": "2022",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-13",
+                "title": "Visual cryptography using binary amplitude- only holograms [Invited]",
+                "authors": "Lina Zhou, Yin Xiao, Zilan Pan, Yonggui Cao, and Wen Chen",
+                "journal": "Frontiers in Photonics, 2, 821304 (10pp), 2022.",
+                "year": "2022",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-14",
+                "title": "Physically- enhanced ghost encoding",
+                "authors": "Yin Xiao, Lina Zhou, Zilan Pan, Yonggui Cao, and Wen Chen",
+                "journal": "Optics Letters, 47 (2), 433-436, 2022",
+                "year": "2022",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-15",
+                "title": "Analog ghost hidden in 2D random binary patterns for free-space optical data transmission",
+                "authors": "Yin Xiao, Lina Zhou, Zilan Pan, Yonggui Cao, Mo Yang, and Wen Chen",
+                "journal": "Optics and Lasers in Engineering, 150, 106880 (5pp), 2022",
+                "year": "2022",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-16",
+                "title": "Optical analog-signal transmission and retrieval through turbid water",
+                "authors": "Zilan Pan, Yin Xiao, Yonggui Cao, Lina Zhou, and Wen Chen",
+                "journal": "Applied Optics, 60 (34), 10704-10713, 2021",
+                "year": "2021",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-17",
+                "title": "Non-line-of- sight optical information transmission through turbid water",
+                "authors": "Zilan Pan, Yin Xiao, Lina Zhou, Yonggui Cao, Mo Yang, and Wen Chen",
+                "journal": "Optics Express, 29 (24), 39498-39510, 2021",
+                "year": "2021",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-18",
+                "title": "Optical hiding based on single- input multiple- output and binary amplitude-only holograms via the modified Gerchberg-Saxton algorithm",
+                "authors": "Lina Zhou, Yin Xiao, Zilan Pan, Yonggui Cao, and Wen Chen",
+                "journal": "Optics Express, 29 (16), 25675-25696, 2021",
+                "year": "2021",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-19",
+                "title": "High- fidelity ghost diffraction and transmission in free space through scattering media",
+                "authors": "Yin Xiao, Lina Zhou, and Wen Chen",
+                "journal": "Applied Physics Letters, 118(10), 104001 (5pp), 2021",
+                "year": "2021",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-20",
+                "title": "Learning-based optical authentication in complex scattering media",
+                "authors": "Lina Zhou, Yin Xiao, and Wen Chen",
+                "journal": "Optics and Lasers in Engineering, 141, 106570 (10pp), 2021",
+                "year": "2021",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-21",
+                "title": "Optical information authentication using phase- only patterns with single-pixel optical detection",
+                "authors": "Yin Xiao, Lina Zhou, and Wen Chen",
+                "journal": "Applied Optics, 60(10), B1-B7, 2021",
+                "year": "2021",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-22",
+                "title": "Wavefront control through multi- layer scattering media using single- pixel detector for high-PSNR optical transmission",
+                "authors": "Yin Xiao, Lina Zhou, and Wen Chen",
+                "journal": "Optics and Lasers in Engineering, 139, 106453 (6pp), 2021",
+                "year": "2021",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-23",
+                "title": "Learning complex scattering media for optical encryption",
+                "authors": "Lina Zhou, Yin Xiao, and Wen Chen",
+                "journal": "Optics Letters, 45(18), 5279-5282, 2020",
+                "year": "2020",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-24",
+                "title": "Secured single-pixel ghost holography",
+                "authors": "Yin Xiao, Lina Zhou, and Wen Chen",
+                "journal": "Optics and Lasers in Engineering, 128, 106045 (14pp), 2020",
+                "year": "2020",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-25",
+                "title": "Learning-based attacks for detecting the vulnerability of computer- generated hologram based optical encryption",
+                "authors": "Lina Zhou, Yin Xiao, and Wen Chen",
+                "journal": "Optics Express, 28(2), 2499-2510, 2020",
+                "year": "2020",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-26",
+                "title": "Vulnerability to machine learning attacks of optical encryption based on diffractive imaging",
+                "authors": "Lina Zhou, Yin Xiao, and Wen Chen",
+                "journal": "Optics and Lasers in Engineering, 125, 105858 (6pp), 2020",
+                "year": "2020",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-27",
+                "title": "Single-pixel imaging authentication using sparse Hadamard spectrum coefficients",
+                "authors": "Yin Xiao, Lina Zhou, and Wen Chen",
+                "journal": "IEEE Photonics Technology Letters, 31(24), 1975-1978, 2019",
+                "year": "2019",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-28",
+                "title": "Machine-learning attacks on interference-based optical encryption: experimental demonstration",
+                "authors": "Lina Zhou, Yin Xiao, and Wen Chen",
+                "journal": "Optics Express, 27(18), 26143-26154, 2019",
+                "year": "2019",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-29",
+                "title": "Imaging through turbid media with vague concentrations based on cosine similarity and convolutional neural network",
+                "authors": "Lina Zhou, Yin Xiao, and Wen Chen",
+                "journal": "IEEE Photonics Journal, 11(4), 7801315 (15pp), 2019",
+                "year": "2019",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-30",
+                "title": "Experimental demonstration of ghost- imaging- based authentication in scattering media",
+                "authors": "Yin Xiao, Lina Zhou, and Wen Chen",
+                "journal": "Optics Express, 27(15), 20558-20566, 2019",
+                "year": "2019",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-31",
+                "title": "Direct single-step measurement of Hadamard spectrum using single- pixel optical detection",
+                "authors": "Yin Xiao, Lina Zhou, and Wen Chen",
+                "journal": "IEEE Photonics Technology Letters, 31(11), 845-848, 2019",
+                "year": "2019",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-32",
+                "title": "Fourier spectrum retrieval in single-pixel imaging",
+                "authors": "Yin Xiao, Lina Zhou, and Wen Chen",
+                "journal": "IEEE Photonics Journal, 11(2), 7800411 (11pp), 2019",
+                "year": "2019",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-33",
+                "title": "Optically controllable nanobreaking of metallic nanowires",
+                "authors": "Lina Zhou, Jinsheng Lu, Hangbo Yang, Si Luo, Wei Wang, Jun lv, Min Qiu and Q iang Li",
+                "journal": "Applied Physics Letters, 110(8), 081101, 2017",
+                "year": "2017",
+                "type": "期刊论文",
+                "doi": "",
+                "link": "",
+                "keywords": "optics; photonics"
+          },
+          {
+                "id": "default-paper-34",
+                "title": "Light- induced pulling and pushing by the synergic effect of optical force and photophoretic force",
+                "authors": "Jinsheng Lu, Hangbo Yang, Lina Zhou, Yuanqing Yang, Si Luo, Qiang Li and Min Qiu",
+                "journal": "Physical Review Letters, 118(4), 043601, 2017",
+                "year": "2017",
+                "type": "会议论文",
+                "doi": "",
+                "link": "",
+                "keywords": "conference presentation"
+          },
+          {
+                "id": "default-paper-35",
+                "title": "Optical transmission through thick biological tissue using optical modulation",
+                "authors": "Zilan Pan, Yin Xiao, Lina Zhou, and Wen Chen",
+                "journal": "International Conference on Optical and Photonic Engineering (icOPEN 2022), 24-27 November 2022, Nanjing, China.",
+                "year": "2022",
+                "type": "会议论文",
+                "doi": "",
+                "link": "",
+                "keywords": "conference presentation"
+          },
+          {
+                "id": "default-paper-36",
+                "title": "Learning enabled optical encryption in complex scattering media",
+                "authors": "Lina Zhou, Yin Xiao, and Wen Chen",
+                "journal": "The 43rd PhotonIcs and Electromagnetics Research Symposium (PIERS), IEEE Xplore, 21 November 2021-25 November 2021, Hangzhou, China",
+                "year": "2021",
+                "type": "会议论文",
+                "doi": "",
+                "link": "",
+                "keywords": "conference presentation"
+          },
+          {
+                "id": "default-paper-37",
+                "title": "Deep learning based attack on phase-truncated optical encoding",
+                "authors": "Lina Zhou, Xudong Chen, and Wen Chen",
+                "journal": "2020 IEEE MTT-S International Conference on Numerical Electromagnetic and Multiphysics Modeling and Optimization (NEMO2020), 7 December 2020-9 December 2020, Hangzhou, China.",
+                "year": "2020",
+                "type": "会议论文",
+                "doi": "",
+                "link": "",
+                "keywords": "conference presentation"
+          },
+          {
+                "id": "default-paper-38",
+                "title": "Imaging through turbulent media using deep learning method",
+                "authors": "Lina Zhou, Xudong Chen, and Wen Chen",
+                "journal": "18th IEEE International Conference on Industrial Informatics (INDIN2020), IEEE Xplore, 20 July 2020-23 July 2020, The University of Warwick, Coventry, UK.",
+                "year": "2020",
+                "type": "会议论文",
+                "doi": "",
+                "link": "",
+                "keywords": "conference presentation"
+          },
+          {
+                "id": "default-paper-39",
+                "title": "High-quality object reconstruction based on ghost imaging",
+                "authors": "Yin Xiao, Lina Zhou, and Wen Chen",
+                "journal": "PhotonIcs & Electromagnetics Research Symposium (PIERS2019), IEEE Xplore, 17-20 December 2019, Xiamen, China.",
+                "year": "2019",
+                "type": "会议论文",
+                "doi": "",
+                "link": "",
+                "keywords": "conference presentation"
+          },
+          {
+                "id": "default-paper-40",
+                "title": "Image recovery through turbid water under wide distance ranges",
+                "authors": "Lina Zhou, Yin Xiao, and Wen Chen",
+                "journal": "International Conference on Optical and Photonic Engineering (icOPEN 2019), Proceedings of SPIE, 16-20 July 2019, Phuket, Thailand.",
+                "year": "2019",
+                "type": "会议论文",
+                "doi": "",
+                "link": "",
+                "keywords": "conference presentation"
+          },
+          {
+                "id": "default-paper-41",
+                "title": "Off-axis digital hologram retrieval based on single- pixel optical imaging",
+                "authors": "Yin Xiao, Lina Zhou, and Wen Chen",
+                "journal": "OSA Imaging and Applied Optics Congress, OSA Publishing, 24-27 June 2019, Munich, Germany.",
+                "year": "2019",
+                "type": "会议论文",
+                "doi": "",
+                "link": "",
+                "keywords": "conference presentation"
+          },
+          {
+                "id": "default-paper-42",
+                "title": "Learning based holographic reconstruction through a diffuser",
+                "authors": "Lina Zhou, Yin Xiao, and Wen Chen",
+                "journal": "PhotonIcs & Electromagnetics Research Symposium (PIERS 2019), IEEE Xplore, 17-20 June 2019, Rome, Italy.",
+                "year": "2019",
+                "type": "会议论文",
+                "doi": "",
+                "link": "",
+                "keywords": "conference presentation"
+          },
+          {
+                "id": "default-paper-43",
+                "title": "Multiple-plane object reconstruction using single- pixel digital holography",
+                "authors": "Yin Xiao, Lina Zhou, and Wen Chen",
+                "journal": "IEEE 28th International Symposium on Industrial Electronics (IEEE ISIE2019), IEEE Xplore,12- 14 June 2019, Vancouver, Canada.",
+                "year": "2019",
+                "type": "会议论文",
+                "doi": "",
+                "link": "",
+                "keywords": "conference presentation"
+          },
+          {
+                "id": "default-paper-44",
+                "title": "Laser assisted welding of layered metallic nanostructure",
+                "authors": "Hangbo Yang, Lina Zhou, Jinsheng Lu, Shuowei Dai, Min Qiu and Qiang Li",
+                "journal": "IEEE 15th International Conference on Optical Communications and Networks (ICOCN), IEEE Xplore, 1-3 March 2016, Hangzhou, China.",
+                "year": "2016",
+                "type": "会议论文",
+                "doi": "",
+                "link": "",
+                "keywords": "conference presentation"
+          },
+          {
+                "id": "default-paper-45",
+                "title": "Laser assisted welding of gold nanowires",
+                "authors": "Lina Zhou, Guoping Liu, Si Luo, Qiang Li and Min Qiu",
+                "journal": "5th International Conference on Advances in Optoelectronics and Micro/Nano-optics (AOM 2015), Journal of Physics: Conference Series, 680, 28-31 October 2015, Hangzhou, China Scholarships and",
+                "year": "2015",
+                "type": "会议论文",
+                "doi": "",
+                "link": "",
+                "keywords": "conference presentation"
+          }
     ];
   }
 
@@ -182,6 +671,7 @@ const ProgressApp = (() => {
         review_status: "未读",
         feedback: ""
       };
+      row.report_date = row.period || null;
       write(KEYS.progress, [row, ...progressItems()]);
       try {
         await cloudInsert("research_progress", row);
@@ -275,7 +765,7 @@ const ProgressApp = (() => {
       <div class="section-head">
         <div>
           <h3>${escapeHtml(item.student_name)}｜${escapeHtml(item.project_title)}</h3>
-          <p class="meta">${escapeHtml(item.student_level)}｜${escapeHtml(item.research_direction)}｜${escapeHtml(item.period)}｜${formatDate(item.created_at)}</p>
+          <p class="meta">${escapeHtml(item.student_level)}｜${escapeHtml(item.research_direction)}｜汇报日期：${escapeHtml(item.period)}｜提交时间：${formatDate(item.created_at)}</p>
         </div>
         <span class="pill ${warn ? "warn" : "ok"}">${escapeHtml(item.review_status || "未读")}</span>
       </div>
@@ -530,12 +1020,13 @@ const ProgressApp = (() => {
   }
 
   function progressSummary(rows) {
-    return rows.map((item, index) => `${index + 1}. ${item.student_name}｜${item.period}｜${item.project_title}\n完成：${item.completed_work}\n问题：${item.blockers || "无"}\n下一步：${item.next_plan}\n`).join("\n") || "暂无进展记录。";
+    return rows.map((item, index) => `${index + 1}. ${item.student_name}｜汇报日期：${item.period}｜${item.project_title}\n完成：${item.completed_work}\n问题：${item.blockers || "无"}\n下一步：${item.next_plan}\n`).join("\n") || "暂无进展记录。";
   }
 
   function exportProgressCsv() {
-    const headers = ["created_at","student_name","student_level","research_direction","period","project_title","advisor","completed_work","key_results","blockers","next_plan","status","review_status","feedback","attachment_url","notes"];
-    const lines = [headers.join(",")].concat(progressItems().map(row => headers.map(h => `"${String(row[h] || "").replaceAll('"', '""')}"`).join(",")));
+    const headers = ["created_at","student_name","student_level","research_direction","report_date","project_title","advisor","completed_work","key_results","blockers","next_plan","status","review_status","feedback","attachment_url","notes"];
+    const exportRows = progressItems().map(row => ({ ...row, report_date: row.period }));
+    const lines = [headers.join(",")].concat(exportRows.map(row => headers.map(h => `"${String(row[h] || "").replaceAll('"', '""')}"`).join(",")));
     const blob = new Blob(["\ufeff" + lines.join("\n")], { type: "text/csv;charset=utf-8" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
@@ -561,7 +1052,8 @@ const ProgressApp = (() => {
         student_name: "测试学生A",
         student_level: "硕士生",
         research_direction: "微波光子信号处理技术",
-        period: "2026年第35周",
+        period: "2026-08-31",
+        report_date: "2026-08-31",
         project_title: "微波光子链路线性化实验",
         advisor: "杨老师",
         completed_work: "完成链路搭建和初步频响测试，整理了三组实验数据。",

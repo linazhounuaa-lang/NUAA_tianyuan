@@ -5,6 +5,7 @@ create table if not exists research_progress (
   student_level text,
   research_direction text,
   period text,
+  report_date date,
   project_title text,
   advisor text,
   completed_work text,
@@ -61,6 +62,8 @@ create table if not exists research_papers (
   link text,
   keywords text
 );
+
+alter table research_progress add column if not exists report_date date;
 
 create table if not exists research_projects (
   id uuid primary key default gen_random_uuid(),
