@@ -175,6 +175,12 @@ const ProgressApp = (() => {
     else console.warn(message);
   }
 
+  function notify(message, targetId = "cloudNotice") {
+    const target = $(`#${targetId}`);
+    if (target) target.textContent = message;
+    else console.warn(message);
+  }
+
   async function loadProgressOnly() {
     if (!cloudEnabled()) return;
     const progress = await safeCloudRead("research_progress?select=*&order=created_at.desc", progressItems());
@@ -832,8 +838,7 @@ const ProgressApp = (() => {
           write(KEYS.progress, [row, ...progressItems()]);
           renderSharedProgress();
         }
-        alert(file ? "附件上传或云端保存失败，请稍后重试，或先使用附件链接提交。" : "云端保存失败，但数据已临时保存在本机。");
-        $("#submitMessage").textContent = "提交未完全成功，请按提示处理。";
+        $("#submitMessage").textContent = file ? "附件上传或云端保存失败，请稍后重试，或先使用附件链接提交。" : "云端保存失败，但数据已临时保存在本机。";
       } finally {
         submitButton.disabled = false;
       }
@@ -878,8 +883,7 @@ const ProgressApp = (() => {
           renderShareFilters();
           renderSharedResources();
         }
-        alert(file ? "文件上传失败，请稍后重试，或先填写外部链接。" : "云端保存失败，当前只保存了本机缓存。");
-        $("#shareMessage").textContent = "提交未完全成功，请按提示处理。";
+        $("#shareMessage").textContent = file ? "文件上传失败，请稍后重试，或先填写外部链接。" : "云端保存失败，当前只保存了本机缓存。";
       } finally {
         submitButton.disabled = false;
       }
@@ -1092,7 +1096,7 @@ const ProgressApp = (() => {
       return;
     }
     try { await cloudPatch("research_progress", id, { [progressField]: value }); }
-    catch (error) { console.error(error); alert("云端更新失败，当前只更新了本机缓存。"); }
+    catch (error) { console.error(error); notify("云端更新失败，已先保存到本机缓存。请稍后确认 Supabase。"); }
     renderProgress();
   }
 
@@ -1109,7 +1113,7 @@ const ProgressApp = (() => {
       await cloudDelete("research_progress", id);
       await deleteAttachment(current?.attachment_path);
     }
-    catch (error) { console.error(error); alert("云端删除失败，当前只删除了本机缓存。"); }
+    catch (error) { console.error(error); notify("云端删除失败，当前只删除了本机缓存。请稍后确认 Supabase。"); }
     renderProgress();
   }
 
@@ -1131,8 +1135,8 @@ const ProgressApp = (() => {
     const data = formData($("#profileForm"));
     write(KEYS.profile, data);
     try { await cloudUpsertProfile(data); }
-    catch (error) { console.error(error); alert("云端保存失败，当前只保存了本机缓存。"); }
-    alert("学术主页信息已保存。");
+    catch (error) { console.error(error); notify("云端保存失败，当前只保存了本机缓存。请稍后确认 Supabase。"); }
+    notify("学术主页信息已保存。");
   }
 
   function renderPaperEditor() {
@@ -1164,7 +1168,7 @@ const ProgressApp = (() => {
     const row = { id: uid(), created_at: new Date().toISOString(), role: "项目负责人", title: "新项目名称", period: "", funding: "", status: "在研", description: "" };
     write(KEYS.projects, [row, ...projects().filter(project => !String(project.id).startsWith("default-"))]);
     try { await cloudInsert("research_projects", row); }
-    catch (error) { console.error(error); alert("云端新增失败，当前只添加了本机缓存。"); }
+    catch (error) { console.error(error); notify("云端新增失败，当前只添加了本机缓存。"); }
     renderProjectEditor();
     renderStats();
   }
@@ -1182,7 +1186,7 @@ const ProgressApp = (() => {
       else await cloudPatch("research_projects", id, { [projectField]: value });
     } catch (error) {
       console.error(error);
-      alert("云端更新失败，当前只更新了本机缓存。");
+      notify("云端更新失败，当前只更新了本机缓存。");
     }
     renderProjectEditor();
   }
@@ -1193,7 +1197,7 @@ const ProgressApp = (() => {
     write(KEYS.projects, projects().filter(project => project.id !== id));
     if (!String(id).startsWith("default-")) {
       try { await cloudDelete("research_projects", id); }
-      catch (error) { console.error(error); alert("云端删除失败，当前只删除了本机缓存。"); }
+      catch (error) { console.error(error); notify("云端删除失败，当前只删除了本机缓存。"); }
     }
     renderProjectEditor();
     renderStats();
@@ -1216,7 +1220,7 @@ const ProgressApp = (() => {
     const row = { id: uid(), created_at: new Date().toISOString(), title: "新论文题目", authors: "", journal: "", year: String(new Date().getFullYear()), type: "期刊论文", doi: "", link: "", keywords: "" };
     write(KEYS.papers, [row, ...papers()]);
     try { await cloudInsert("research_papers", row); }
-    catch (error) { console.error(error); alert("云端新增失败，当前只添加了本机缓存。"); }
+    catch (error) { console.error(error); notify("云端新增失败，当前只添加了本机缓存。"); }
     renderPaperEditor();
     renderStats();
   }
@@ -1234,7 +1238,7 @@ const ProgressApp = (() => {
       else await cloudPatch("research_papers", id, { [paperField]: value });
     } catch (error) {
       console.error(error);
-      alert("云端更新失败，当前只更新了本机缓存。");
+      notify("云端更新失败，当前只更新了本机缓存。");
     }
     renderPaperEditor();
   }
@@ -1244,7 +1248,7 @@ const ProgressApp = (() => {
     if (!confirm("确定删除这篇论文吗？")) return;
     write(KEYS.papers, papers().filter(paper => paper.id !== id));
     try { await cloudDelete("research_papers", id); }
-    catch (error) { console.error(error); alert("云端删除失败，当前只删除了本机缓存。"); }
+    catch (error) { console.error(error); notify("云端删除失败，当前只删除了本机缓存。"); }
     renderPaperEditor();
     renderStats();
   }
@@ -1513,7 +1517,7 @@ const ProgressApp = (() => {
         if (!papers().length) await Promise.all(samplePapers.map(item => cloudInsert("research_papers", item)));
       } catch (error) {
         console.error(error);
-        alert("测试数据写入云端失败，当前只加入了本机缓存。");
+        notify("测试数据写入云端失败，当前只加入了本机缓存。");
       }
     }
     renderAdmin();
