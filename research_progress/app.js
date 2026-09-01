@@ -181,6 +181,14 @@ const ProgressApp = (() => {
     else console.warn(message);
   }
 
+  function errorMessage(error) {
+    const message = error?.message || String(error || "未知错误");
+    if (message.includes("Failed to fetch") || message.includes("fetch failed")) {
+      return "无法连接 Supabase。请检查 Supabase 项目 URL/API key 是否正确，或当前网络是否能访问 Supabase。";
+    }
+    return message.replace(/^Cloud request failed\s*/i, "Supabase 返回错误 ");
+  }
+
   async function loadProgressOnly() {
     if (!cloudEnabled()) return;
     const progress = await safeCloudRead("research_progress?select=*&order=created_at.desc", progressItems());
@@ -845,7 +853,7 @@ const ProgressApp = (() => {
         console.error(error);
         write(KEYS.progress, [row, ...progressItems()]);
         renderSharedProgress();
-        $("#submitMessage").textContent = "云端保存失败，但文字进展已临时保存在本机。请稍后确认 Supabase。";
+        $("#submitMessage").textContent = `云端保存失败，文字进展只临时保存在本机。本机外看不到这条记录。原因：${errorMessage(error)}`;
       } finally {
         submitButton.disabled = false;
       }
@@ -897,7 +905,7 @@ const ProgressApp = (() => {
         write(KEYS.shares, [row, ...sharedResources()]);
         renderShareFilters();
         renderSharedResources();
-        $("#shareMessage").textContent = "云端保存失败，当前只保存了本机缓存。请稍后确认 Supabase。";
+        $("#shareMessage").textContent = `云端保存失败，当前只保存了本机缓存。原因：${errorMessage(error)}`;
       } finally {
         submitButton.disabled = false;
       }
@@ -1006,10 +1014,32 @@ const ProgressApp = (() => {
     $("#reviewFilter").onchange = renderProgress;
     $("#copySummary").onclick = () => copyText(progressSummary(filteredProgress()));
     $("#exportCsv").onclick = exportProgressCsv;
+    $("#cloudTest").onclick = testCloudConnection;
     $("#seedData").onclick = seedData;
     $("#saveProfile").onclick = saveProfile;
     $("#addProject").onclick = () => addProject();
     $("#addPaper").onclick = () => addPaper();
+  }
+
+  async function testCloudConnection() {
+    const tests = [
+      ["进展表 research_progress", () => cloudRequest("research_progress?select=id&limit=1")],
+      ["文献分享表 shared_resources", () => cloudRequest("shared_resources?select=id&limit=1")],
+      ["进展附件桶 progress-attachments", () => storageRequest("bucket/progress-attachments")],
+      ["文献附件桶 shared-resources", () => storageRequest("bucket/shared-resources")]
+    ];
+    notify("正在检查云端连接...");
+    const results = [];
+    for (const [label, run] of tests) {
+      try {
+        await run();
+        results.push(`${label}：正常`);
+      } catch (error) {
+        console.error(error);
+        results.push(`${label}：失败，${errorMessage(error)}`);
+      }
+    }
+    notify(results.join("；"));
   }
 
   function renderStats() {
