@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>文献分享 - 南京航空航天大学微波光子学实验室</title>
-  <link rel="stylesheet" href="styles.css?v=20260901-noalert1">
+  <link rel="stylesheet" href="styles.css?v=20260901-upload1">
 </head>
 <body>
   <header class="topbar">
@@ -51,6 +51,7 @@
       </label>
       <label>上传文件 / File
         <input type="file" name="resource_file" accept=".pdf,.ppt,.pptx,.doc,.docx,.xls,.xlsx,.zip,.rar,.7z,.m,.py,.ipynb,.txt">
+        <span class="field-hint">文件会公开给组内下载；如上传失败，可先填写外部链接。</span>
       </label>
       <label>外部链接 / Link <input name="resource_url" placeholder="论文链接、GitHub、软件下载页等"></label>
       <label class="wide">关键词 / Keywords <input name="keywords" placeholder="single-pixel imaging; THz; nonlinear optics"></label>
@@ -69,8 +70,8 @@
     <section class="paper-list" id="shareList"></section>
   </main>
 
-  <script src="config.js?v=20260901-noalert1"></script>
-  <script src="app.js?v=20260901-noalert1"></script>
+  <script src="config.js?v=20260901-upload1"></script>
+  <script src="app.js?v=20260901-upload1"></script>
   <script>ProgressApp.initShare();</script>
 </body>
 </html>

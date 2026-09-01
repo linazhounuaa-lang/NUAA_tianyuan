@@ -824,21 +824,28 @@ const ProgressApp = (() => {
         feedback: ""
       };
       row.report_date = row.period || null;
+      let attachmentFailed = false;
       try {
-        const attachment = await uploadAttachment(file, row.id);
-        if (attachment) Object.assign(row, attachment);
+        if (file) {
+          try {
+            const attachment = await uploadAttachment(file, row.id);
+            if (attachment) Object.assign(row, attachment);
+          } catch (error) {
+            attachmentFailed = true;
+            row.notes = [row.notes, `附件未上传成功：${file.name}`].filter(Boolean).join("\n");
+            console.error(error);
+          }
+        }
         write(KEYS.progress, [row, ...progressItems()]);
         await cloudInsert("research_progress", row);
         event.currentTarget.reset();
-        $("#submitMessage").textContent = file ? "提交成功，附件已上传，老师将在后台查看并下载。" : "提交成功，文字进展已更新到组内进展墙。";
+        $("#submitMessage").textContent = attachmentFailed ? "文字进展已提交，但附件没有上传成功。请确认 Supabase 已运行 schema.sql，或先把附件链接粘到“附件链接”。" : (file ? "提交成功，附件已上传，老师将在后台查看并下载。" : "提交成功，文字进展已更新到组内进展墙。");
         renderSharedProgress();
       } catch (error) {
         console.error(error);
-        if (!file) {
-          write(KEYS.progress, [row, ...progressItems()]);
-          renderSharedProgress();
-        }
-        $("#submitMessage").textContent = file ? "附件上传或云端保存失败，请稍后重试，或先使用附件链接提交。" : "云端保存失败，但数据已临时保存在本机。";
+        write(KEYS.progress, [row, ...progressItems()]);
+        renderSharedProgress();
+        $("#submitMessage").textContent = "云端保存失败，但文字进展已临时保存在本机。请稍后确认 Supabase。";
       } finally {
         submitButton.disabled = false;
       }
@@ -866,24 +873,31 @@ const ProgressApp = (() => {
       };
       submitButton.disabled = true;
       $("#shareMessage").textContent = file ? "正在上传并发布分享..." : "正在发布分享...";
+      let uploadFailed = false;
       try {
-        const uploaded = await uploadSharedResource(file, row.id);
-        if (uploaded) Object.assign(row, uploaded);
+        if (file) {
+          try {
+            const uploaded = await uploadSharedResource(file, row.id);
+            if (uploaded) Object.assign(row, uploaded);
+          } catch (error) {
+            uploadFailed = true;
+            row.summary = [row.summary, `文件未上传成功：${file.name}`].filter(Boolean).join("\n");
+            console.error(error);
+          }
+        }
         write(KEYS.shares, [row, ...sharedResources()]);
         if (cloudEnabled()) await cloudInsert("shared_resources", row);
         event.currentTarget.reset();
         populateDirections();
         renderShareFilters();
         renderSharedResources();
-        $("#shareMessage").textContent = "分享成功，组内成员可以在下方查看和下载。";
+        $("#shareMessage").textContent = uploadFailed ? "文字分享已发布，但文件没有上传成功。请确认 Supabase 已运行 schema.sql，或先填写外部链接。" : "分享成功，组内成员可以在下方查看和下载。";
       } catch (error) {
         console.error(error);
-        if (!file) {
-          write(KEYS.shares, [row, ...sharedResources()]);
-          renderShareFilters();
-          renderSharedResources();
-        }
-        $("#shareMessage").textContent = file ? "文件上传失败，请稍后重试，或先填写外部链接。" : "云端保存失败，当前只保存了本机缓存。";
+        write(KEYS.shares, [row, ...sharedResources()]);
+        renderShareFilters();
+        renderSharedResources();
+        $("#shareMessage").textContent = "云端保存失败，当前只保存了本机缓存。请稍后确认 Supabase。";
       } finally {
         submitButton.disabled = false;
       }

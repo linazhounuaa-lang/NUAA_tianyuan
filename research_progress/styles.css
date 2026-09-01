@@ -201,6 +201,7 @@ nav a[aria-current="page"], nav a:hover { color: #fff; background: rgba(255,255,
 .form-grid.single { grid-template-columns: 1fr; }
 .wide { grid-column: 1 / -1; }
 label { display: grid; gap: 7px; font-weight: 700; }
+.field-hint { color: var(--muted); font-size: 13px; font-weight: 500; }
 input, select, textarea {
   width: 100%;
   border: 1px solid #cbd6df;
